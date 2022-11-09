@@ -7,12 +7,14 @@ class Lexer:
 
     keywords = {
         'const': 'CONST',
+        'var': 'VAR',
         'undefined': 'UNDEFINED',
         'u8': 'TYPE_U8',
     }
 
     tokens = [
         'IDENT',
+        'STRING',
         'LBRACE',
         'RBRACE',
         'INTEGER',
@@ -26,6 +28,7 @@ class Lexer:
     t_EQUAL = r'='
     t_SEMICOLON = r';'
     t_COLON = r':'
+    t_STRING = r'"[^"]*"'
 
     t_ignore = r' '
 
