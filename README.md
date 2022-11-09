@@ -31,6 +31,14 @@ python -m pip install -r requirements.txt
    unittest can discover it. For more on testing with Python see:
    https://realpython.com/python-testing/.
 
+```bash
+# Using the Makefile
+make test
+
+# Or with python
+python -m unittest discover -s tests
+```
+
 5. Open a PR.
 
 ## License
