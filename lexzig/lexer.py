@@ -1,5 +1,6 @@
 import ply.lex as pylex
 
+
 class Lexer:
     """
     Implements a lexer for a subset of the Zig programming language.
@@ -10,6 +11,9 @@ class Lexer:
         'var': 'VAR',
         'undefined': 'UNDEFINED',
         'u8': 'TYPE_U8',
+        'if': 'IF',
+        'else': 'ELSE',
+        'return': 'RETURN',
     }
 
     tokens = [
@@ -21,6 +25,11 @@ class Lexer:
         'EQUAL',
         'SEMICOLON',
         'COLON',
+        'LPAREN',
+        'RPAREN',
+        'LCURLY',
+        'RCURLY',
+        'LT',
     ] + list(keywords.values())
 
     t_LBRACE = r'\['
@@ -29,10 +38,15 @@ class Lexer:
     t_SEMICOLON = r';'
     t_COLON = r':'
     t_STRING = r'"[^"]*"'
+    t_LPAREN = r'\('
+    t_RPAREN = r'\)'
+    t_LCURLY = r'{'
+    t_RCURLY = r'}'
+    t_LT = r'<'
 
     t_ignore = r' '
 
-    def t_INTEGER(self, t):
+    def t_INTEGER(self, t: pylex.LexToken):
         r'\d+'
         t.value = int(t.value)
         return t

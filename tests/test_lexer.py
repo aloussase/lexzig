@@ -1,4 +1,5 @@
 import unittest
+from typing import List
 
 from lexzig.lexer import Lexer
 
@@ -6,7 +7,7 @@ from lexzig.lexer import Lexer
 class TestLexer(unittest.TestCase):
     lexer = Lexer()
 
-    def run_test(self, *, input: str, expected):
+    def run_test(self, *, input: str, expected: List):
         tokens = self.lexer.lex(input)
         tests = expected
         self.assertEqual(len(tests), len(tokens))
@@ -19,18 +20,18 @@ class TestLexer(unittest.TestCase):
         Test that the lexer can lex constant variable declarations.
         """
         self.run_test(
-            input = r"const buffer: [100]u8 = undefined;",
-            expected =  [
-                { 'type': 'CONST',   'value': 'const' },
-                { 'type': 'IDENT',   'value': 'buffer' },
-                { 'type': 'COLON',   'value': ':' },
-                { 'type': 'LBRACE',  'value': '[' },
-                { 'type': 'INTEGER', 'value': 100 },
-                { 'type': 'RBRACE',  'value': ']' },
-                { 'type': 'TYPE_U8', 'value': 'u8' },
-                { 'type': 'EQUAL',   'value': '=' },
-                { 'type': 'UNDEFINED', 'value': 'undefined' },
-                { 'type': 'SEMICOLON', 'value': ';' },
+            input=r"const buffer: [100]u8 = undefined;",
+            expected=[
+                {'type': 'CONST',   'value': 'const'},
+                {'type': 'IDENT',   'value': 'buffer'},
+                {'type': 'COLON',   'value': ':'},
+                {'type': 'LBRACE',  'value': '['},
+                {'type': 'INTEGER', 'value': 100},
+                {'type': 'RBRACE',  'value': ']'},
+                {'type': 'TYPE_U8', 'value': 'u8'},
+                {'type': 'EQUAL',   'value': '='},
+                {'type': 'UNDEFINED', 'value': 'undefined'},
+                {'type': 'SEMICOLON', 'value': ';'},
             ]
         )
 
@@ -39,13 +40,40 @@ class TestLexer(unittest.TestCase):
         Test that the lexer can lex variable declarations.
         """
         self.run_test(
-            input = r'var name = "John Doe";',
-            expected =  [
-                { 'type': 'VAR',       'value': 'var' },
-                { 'type': 'IDENT',     'value': 'name' },
-                { 'type': 'EQUAL',     'value': '=' },
-                { 'type': 'STRING',    'value': '"John Doe"' },
-                { 'type': 'SEMICOLON', 'value': ';' },
+            input=r'var name = "John Doe";',
+            expected=[
+                {'type': 'VAR',       'value': 'var'},
+                {'type': 'IDENT',     'value': 'name'},
+                {'type': 'EQUAL',     'value': '='},
+                {'type': 'STRING',    'value': '"John Doe"'},
+                {'type': 'SEMICOLON', 'value': ';'},
+            ]
+        )
+
+    def test_lexer_can_lex_if_expressions(self):
+        """
+        Test that the lexer can lex if expressions.
+        """
+        self.run_test(
+            input="if (9 < 10) { return 42; } else { return 69; }",
+            expected=[
+                {'type': 'IF', 'value': 'if'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'INTEGER', 'value': 9},
+                {'type': 'LT', 'value': '<'},
+                {'type': 'INTEGER', 'value': 10},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'LCURLY', 'value': '{'},
+                {'type': 'RETURN', 'value': 'return'},
+                {'type': 'INTEGER', 'value': 42},
+                {'type': 'SEMICOLON', 'value': ';'},
+                {'type': 'RCURLY', 'value': '}'},
+                {'type': 'ELSE', 'value': 'else'},
+                {'type': 'LCURLY', 'value': '{'},
+                {'type': 'RETURN', 'value': 'return'},
+                {'type': 'INTEGER', 'value': 69},
+                {'type': 'SEMICOLON', 'value': ';'},
+                {'type': 'RCURLY', 'value': '}'},
             ]
         )
 
