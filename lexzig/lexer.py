@@ -1,4 +1,5 @@
-import ply.lex as pylex
+import ply.lex as pylex  # type: ignore
+from typing import cast
 
 
 class Lexer:
@@ -67,12 +68,12 @@ class Lexer:
 
     def t_BUILTIN_FUNCTION(self, t: pylex.LexToken):
         r'@[a-zA-Z_][a-zA-Z_0-9]*'
-        t.value = t.value[1:]
+        t.value = t.value[1:]  # type: ignore
         return t
 
     def t_INTEGER(self, t: pylex.LexToken):
         r'\d+'
-        t.value = int(t.value)
+        t.value = int(t.value)  # type: ignore
         return t
 
     def t_IDENT(self, t):

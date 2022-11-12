@@ -1,19 +1,23 @@
+from ply.lex import LexToken  # type: ignore
 import unittest
-from typing import List
+from typing import List, Dict, Literal, Any
 
 from lexzig.lexer import Lexer
+
+TestCase = Dict[Literal['type', 'value'], Any]
 
 
 class TestLexer(unittest.TestCase):
     lexer = Lexer()
 
-    def run_test(self, *, input: str, expected: List):
-        tokens = self.lexer.lex(input)
-        tests = expected
-        self.assertEqual(len(tests), len(tokens))
-        for expected, actual in zip(tests, tokens):
-            self.assertEqual(expected['type'], actual.type)
-            self.assertEqual(expected['value'], actual.value)
+    def run_test(self, *, input: str, expected: List[TestCase]):
+        tokens: List[LexToken] = self.lexer.lex(input)
+
+        self.assertEqual(len(expected), len(tokens))
+
+        for test, actual in zip(expected, tokens):
+            self.assertEqual(test['type'], actual.type)  # type: ignore
+            self.assertEqual(test['value'], actual.value)  # type: ignore
 
     def test_lexer_can_lex_special_variable_names(self):
         """
