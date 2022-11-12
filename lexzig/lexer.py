@@ -65,8 +65,15 @@ class Lexer:
         return t
 
     def t_IDENT(self, t):
-        r'[a-zA-Z_][a-zA-Z_0-9]*'
+        r'(@"[^"]*"|[a-zA-Z_][a-zA-Z_0-9]*)'
+
+        # Check to see if the identifier is actually a keyword.
         t.type = self.keywords.get(t.value, 'IDENT')
+
+        # Remove the @"" from special variable names.
+        if t.value.startswith('@'):
+            t.value = t.value[2:-1]
+
         return t
 
     def t_newline(self, t):

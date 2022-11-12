@@ -15,6 +15,21 @@ class TestLexer(unittest.TestCase):
             self.assertEqual(expected['type'], actual.type)
             self.assertEqual(expected['value'], actual.value)
 
+    def test_lexer_can_lex_special_variable_names(self):
+        """
+        Test that the lexer can lex special variable names.
+        """
+        self.run_test(
+            input=r'''
+            @"una variable con espacios"
+            @"while"
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'una variable con espacios'},
+                {'type': 'IDENT', 'value': 'while'},
+            ]
+        )
+
     def test_lexer_can_lex_builtin_functions(self):
         """
         Test that the lexer can lex builtin functions.
