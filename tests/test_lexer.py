@@ -45,7 +45,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'RBRACE',  'value': ']'},
                 {'type': 'TYPE_U8', 'value': 'u8'},
                 {'type': 'EQUAL',   'value': '='},
-                {'type': 'UNDEFINED', 'value': 'undefined'},
+                {'type': 'TYPE_UNDEFINED', 'value': 'undefined'},
                 {'type': 'SEMICOLON', 'value': ';'},
             ]
         )
