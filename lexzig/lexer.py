@@ -11,6 +11,7 @@ class Lexer:
         'var': 'VAR',
         'undefined': 'UNDEFINED',
         'u8': 'TYPE_U8',
+        'bool': 'TYPE_BOOL',
         'if': 'IF',
         'else': 'ELSE',
         'return': 'RETURN',
@@ -30,6 +31,7 @@ class Lexer:
         'LCURLY',
         'RCURLY',
         'LT',
+        'BUILTIN_FUNCTION'
     ] + list(keywords.values())
 
     t_LBRACE = r'\['
@@ -43,8 +45,9 @@ class Lexer:
     t_LCURLY = r'{'
     t_RCURLY = r'}'
     t_LT = r'<'
+    t_BUILTIN_FUNCTION = r'@[a-zA-Z_][a-zA-Z_0-9]*'
 
-    t_ignore = r' '
+    t_ignore = r' \t'
 
     def t_INTEGER(self, t: pylex.LexToken):
         r'\d+'

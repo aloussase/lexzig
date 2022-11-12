@@ -15,6 +15,21 @@ class TestLexer(unittest.TestCase):
             self.assertEqual(expected['type'], actual.type)
             self.assertEqual(expected['value'], actual.value)
 
+    def test_lexer_can_lex_builtin_functions(self):
+        """
+        Test that the lexer can lex builtin functions.
+        """
+        self.run_test(
+            input=r'@import("std");',
+            expected=[
+                {'type': 'BUILTIN_FUNCTION', 'value': '@import'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'STRING', 'value': '"std"'},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'SEMICOLON', 'value': ';'},
+            ]
+        )
+
     def test_lexer_can_lex_const_variable_declarations(self):
         """
         Test that the lexer can lex constant variable declarations.
