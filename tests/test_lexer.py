@@ -1,10 +1,10 @@
 from ply.lex import LexToken  # type: ignore
 import unittest
-from typing import List, Dict, Literal, Any
+from typing import List, Dict, Literal, Any, TypedDict
 
 from lexzig.lexer import Lexer
 
-TestCase = Dict[Literal['type', 'value'], Any]
+TestCase = TypedDict('TestCase', type=str, value=Any)
 
 
 class TestLexer(unittest.TestCase):
@@ -153,6 +153,30 @@ class TestLexer(unittest.TestCase):
                 {'type': 'FAT_ARROW', 'value': '=>'},
                 {'type': 'INTEGER', 'value': 10},
                 {'type': 'COMMA', 'value': ','},
+                {'type': 'RCURLY', 'value': '}'},
+                {'type': 'SEMICOLON', 'value': ';'},
+            ]
+        )
+
+    def test_lexer_can_lex_enums(self):
+        """
+        Test that the lexer can lex enums.
+        """
+        self.run_test(
+            input=r'const Direction = enum { north, south, east, west };',
+            expected=[
+                {'type': 'CONST', 'value': 'const'},
+                {'type': 'IDENT', 'value': 'Direction'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'ENUM', 'value': 'enum'},
+                {'type': 'LCURLY', 'value': '{'},
+                {'type': 'IDENT', 'value': 'north'},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'IDENT', 'value': 'south'},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'IDENT', 'value': 'east'},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'IDENT', 'value': 'west'},
                 {'type': 'RCURLY', 'value': '}'},
                 {'type': 'SEMICOLON', 'value': ';'},
             ]
