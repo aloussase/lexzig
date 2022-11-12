@@ -19,6 +19,11 @@ class Lexer:
         'if': 'IF',
         'else': 'ELSE',
         'return': 'RETURN',
+        'test': 'TEST',
+        'extern': 'EXTERN',
+        'export': 'EXPORT',
+        'threadlocal': 'THREADLOCAL',
+        'comptime': 'COMPTIME',
         **{t: f'TYPE_{t.upper()}' for t in types},
     }
 
