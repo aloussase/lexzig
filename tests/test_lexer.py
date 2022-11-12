@@ -37,7 +37,7 @@ class TestLexer(unittest.TestCase):
         self.run_test(
             input=r'@import("std");',
             expected=[
-                {'type': 'BUILTIN_FUNCTION', 'value': '@import'},
+                {'type': 'BUILTIN_FUNCTION', 'value': 'import'},
                 {'type': 'LPAREN', 'value': '('},
                 {'type': 'STRING', 'value': '"std"'},
                 {'type': 'RPAREN', 'value': ')'},
@@ -104,6 +104,46 @@ class TestLexer(unittest.TestCase):
                 {'type': 'INTEGER', 'value': 69},
                 {'type': 'SEMICOLON', 'value': ';'},
                 {'type': 'RCURLY', 'value': '}'},
+            ]
+        )
+
+    def test_lexer_can_lex_switch_expressions(self):
+        """
+        Test that the lexer can lex switch expressions.
+        """
+        self.run_test(
+            input='''
+            var x = switch (10) {
+                10, 100 => @divExact(10, 10),
+                else => 10,
+            };
+            ''',
+            expected=[
+                {'type': 'VAR', 'value': 'var'},
+                {'type': 'IDENT', 'value': 'x'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'SWITCH', 'value': 'switch'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'INTEGER', 'value': 10},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'LCURLY', 'value': '{'},
+                {'type': 'INTEGER', 'value': 10},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'INTEGER', 'value': 100},
+                {'type': 'FAT_ARROW', 'value': '=>'},
+                {'type': 'BUILTIN_FUNCTION', 'value': 'divExact'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'INTEGER', 'value': 10},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'INTEGER', 'value': 10},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'ELSE', 'value': 'else'},
+                {'type': 'FAT_ARROW', 'value': '=>'},
+                {'type': 'INTEGER', 'value': 10},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'RCURLY', 'value': '}'},
+                {'type': 'SEMICOLON', 'value': ';'},
             ]
         )
 

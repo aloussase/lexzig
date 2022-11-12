@@ -14,50 +14,59 @@ class Lexer:
     ]
 
     keywords = {
-        'const': 'CONST',
-        'var': 'VAR',
-        'if': 'IF',
-        'else': 'ELSE',
-        'return': 'RETURN',
-        'test': 'TEST',
-        'extern': 'EXTERN',
-        'export': 'EXPORT',
-        'threadlocal': 'THREADLOCAL',
         'comptime': 'COMPTIME',
+        'const': 'CONST',
+        'else': 'ELSE',
+        'export': 'EXPORT',
+        'extern': 'EXTERN',
+        'if': 'IF',
+        'return': 'RETURN',
+        'switch': 'SWITCH',
+        'test': 'TEST',
+        'threadlocal': 'THREADLOCAL',
+        'var': 'VAR',
         **{t: f'TYPE_{t.upper()}' for t in types},
     }
 
     tokens = [
-        'IDENT',
-        'STRING',
-        'LBRACE',
-        'RBRACE',
-        'INTEGER',
-        'EQUAL',
-        'SEMICOLON',
+        'BUILTIN_FUNCTION',
         'COLON',
-        'LPAREN',
-        'RPAREN',
+        'COMMA',
+        'EQUAL',
+        'FAT_ARROW',
+        'IDENT',
+        'INTEGER',
+        'LBRACE',
         'LCURLY',
-        'RCURLY',
+        'LPAREN',
         'LT',
-        'BUILTIN_FUNCTION'
+        'RBRACE',
+        'RCURLY',
+        'RPAREN',
+        'SEMICOLON',
+        'STRING',
     ] + list(keywords.values())
 
-    t_LBRACE = r'\['
-    t_RBRACE = r'\]'
-    t_EQUAL = r'='
-    t_SEMICOLON = r';'
     t_COLON = r':'
-    t_STRING = r'"[^"]*"'
-    t_LPAREN = r'\('
-    t_RPAREN = r'\)'
+    t_COMMA = r','
+    t_FAT_ARROW = r'=>'
+    t_EQUAL = r'='
+    t_LBRACE = r'\['
     t_LCURLY = r'{'
-    t_RCURLY = r'}'
+    t_LPAREN = r'\('
     t_LT = r'<'
-    t_BUILTIN_FUNCTION = r'@[a-zA-Z_][a-zA-Z_0-9]*'
+    t_RBRACE = r'\]'
+    t_RCURLY = r'}'
+    t_RPAREN = r'\)'
+    t_SEMICOLON = r';'
+    t_STRING = r'"[^"]*"'
 
     t_ignore = r' \t'
+
+    def t_BUILTIN_FUNCTION(self, t: pylex.LexToken):
+        r'@[a-zA-Z_][a-zA-Z_0-9]*'
+        t.value = t.value[1:]
+        return t
 
     def t_INTEGER(self, t: pylex.LexToken):
         r'\d+'
