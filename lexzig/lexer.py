@@ -33,6 +33,7 @@ class Lexer:
         'COLON',
         'COMMA',
         'EQUAL',
+        'ELLIPSIS',
         'FAT_ARROW',
         'IDENT',
         'INTEGER',
@@ -50,6 +51,7 @@ class Lexer:
     t_COLON = r':'
     t_COMMA = r','
     t_FAT_ARROW = r'=>'
+    t_ELLIPSIS = r'\.\.\.'
     t_EQUAL = r'='
     t_LBRACE = r'\['
     t_LCURLY = r'{'

@@ -114,6 +114,7 @@ class TestLexer(unittest.TestCase):
         self.run_test(
             input='''
             var x = switch (10) {
+                0...1 => 20,
                 10, 100 => @divExact(10, 10),
                 else => 10,
             };
@@ -127,6 +128,12 @@ class TestLexer(unittest.TestCase):
                 {'type': 'INTEGER', 'value': 10},
                 {'type': 'RPAREN', 'value': ')'},
                 {'type': 'LCURLY', 'value': '{'},
+                {'type': 'INTEGER', 'value': 0},
+                {'type': 'ELLIPSIS', 'value': '...'},
+                {'type': 'INTEGER', 'value': 1},
+                {'type': 'FAT_ARROW', 'value': '=>'},
+                {'type': 'INTEGER', 'value': 20},
+                {'type': 'COMMA', 'value': ','},
                 {'type': 'INTEGER', 'value': 10},
                 {'type': 'COMMA', 'value': ','},
                 {'type': 'INTEGER', 'value': 100},
