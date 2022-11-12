@@ -182,6 +182,92 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
+    def test_lexer_can_lex_the_input_example(self):
+        """
+        Test that the lexer can lex the input example.
+        """
+        self.run_test(
+            input="""
+                const std = @import("std");
+
+                pub fn main() !void {
+                    const stdin = std.io.getStdIn().reader();
+                    var buf: [100]u8 = undefined;
+                    const line = try stdin.readUntilDelimiter(&buf, '\n');
+                    _ = line;
+                }
+            """,
+            expected=[
+                # const std = @import("std");
+                {'type': 'CONST', 'value': 'const'},
+                {'type': 'IDENT', 'value': 'std'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'BUILTIN_FUNCTION', 'value': 'import'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'STRING', 'value': '"std"'},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'SEMICOLON', 'value': ';'},
+                # pub fn main() !void {
+                {'type': 'PUB', 'value': 'pub'},
+                {'type': 'FUNCTION', 'value': 'fn'},
+                {'type': 'IDENT', 'value': 'main'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'BANG', 'value': '!'},
+                {'type': 'TYPE_VOID', 'value': 'void'},
+                {'type': 'LCURLY', 'value': '{'},
+                # const stdin = std.io.getStdIn().reader();
+                {'type': 'CONST', 'value': 'const'},
+                {'type': 'IDENT', 'value': 'stdin'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'IDENT', 'value': 'std'},
+                {'type': 'DOT', 'value': '.'},
+                {'type': 'IDENT', 'value': 'io'},
+                {'type': 'DOT', 'value': '.'},
+                {'type': 'IDENT', 'value': 'getStdIn'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'DOT', 'value': '.'},
+                {'type': 'IDENT', 'value': 'reader'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'SEMICOLON', 'value': ';'},
+                # var buf: [100]u8 = undefined;
+                {'type': 'VAR', 'value': 'var'},
+                {'type': 'IDENT', 'value': 'buf'},
+                {'type': 'COLON', 'value': ':'},
+                {'type': 'LBRACE', 'value': '['},
+                {'type': 'INTEGER', 'value': 100},
+                {'type': 'RBRACE', 'value': ']'},
+                {'type': 'TYPE_U8', 'value': 'u8'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'TYPE_UNDEFINED', 'value': 'undefined'},
+                {'type': 'SEMICOLON', 'value': ';'},
+                # const line = try stdin.readUntilDelimiter(&buf, ’\n’);
+                {'type': 'CONST', 'value': 'const'},
+                {'type': 'IDENT', 'value': 'line'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'TRY', 'value': 'try'},
+                {'type': 'IDENT', 'value': 'stdin'},
+                {'type': 'DOT', 'value': '.'},
+                {'type': 'IDENT', 'value': 'readUntilDelimiter'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'AMPERSAND', 'value': '&'},
+                {'type': 'IDENT', 'value': 'buf'},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'CHAR', 'value': '\'\n\''},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'SEMICOLON', 'value': ';'},
+                # _ = line;
+                {'type': 'UNDERSCORE', 'value': '_'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'IDENT', 'value': 'line'},
+                {'type': 'SEMICOLON', 'value': ';'},
+                # }
+                {'type': 'RCURLY', 'value': '}'},
+            ]
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

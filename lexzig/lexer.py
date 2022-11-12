@@ -22,19 +22,27 @@ class Lexer:
         'export': 'EXPORT',
         'extern': 'EXTERN',
         'enum': 'ENUM',
+        'fn': 'FUNCTION',
         'if': 'IF',
         'return': 'RETURN',
         'switch': 'SWITCH',
         'test': 'TEST',
         'threadlocal': 'THREADLOCAL',
+        'try': 'TRY',
+        'pub': 'PUB',
         'var': 'VAR',
         **{t: f'TYPE_{t.upper()}' for t in types},
     }
 
     tokens: List[str] = [
+        'UNDERSCORE',
+        'AMPERSAND',
+        'BANG',
         'BUILTIN_FUNCTION',
         'COLON',
         'COMMA',
+        'CHAR',
+        'DOT',
         'EQUAL',
         'ELLIPSIS',
         'FAT_ARROW',
@@ -51,8 +59,12 @@ class Lexer:
         'STRING',
     ] + list(keywords.values())
 
+    t_AMPERSAND = r'&'
+    t_BANG = r'!'
     t_COLON = r':'
     t_COMMA = r','
+    t_CHAR = r"'[^']'"
+    t_DOT = '\.'
     t_FAT_ARROW = r'=>'
     t_ELLIPSIS = r'\.\.\.'
     t_EQUAL = r'='
@@ -66,7 +78,7 @@ class Lexer:
     t_SEMICOLON = r';'
     t_STRING = r'"[^"]*"'
 
-    t_ignore = r' \t'
+    t_ignore = ' \t'
 
     def t_BUILTIN_FUNCTION(self, t: LexToken) -> LexToken:
         r'@[a-zA-Z_][a-zA-Z_0-9]*'
@@ -87,6 +99,9 @@ class Lexer:
         # Remove the @"" from special variable names.
         if t.value.startswith('@'):
             t.value = t.value[2:-1]
+
+        if t.value == '_':
+            t.type = 'UNDERSCORE'
 
         return t
 
