@@ -10,7 +10,7 @@ class Lexer:
         'i8', 'u8', 'i16', 'u16', 'i32', 'u32', 'i64', 'u64', 'i128', 'u128', 'isize', 'usize',
         'c_short', 'c_ushort', 'c_int', 'c_uint', 'c_long', 'c_ulong', 'c_longlong', 'c_ulonglong',
         'c_longdouble', 'f16', 'f32', 'f64', 'f80', 'f128', 'bool', 'anyopaque', 'void', 'noreturn',
-        'type', 'anyerror', 'comptime_int', 'comptime_float', 'null', 'undefined'
+        'type', 'anyerror', 'anytype', 'comptime_int', 'comptime_float', 'null', 'undefined'
     ]
 
     keywords = {
@@ -20,11 +20,15 @@ class Lexer:
         'export': 'EXPORT',
         'extern': 'EXTERN',
         'if': 'IF',
+        'while': 'WHILE',
         'return': 'RETURN',
         'switch': 'SWITCH',
         'test': 'TEST',
         'threadlocal': 'THREADLOCAL',
         'var': 'VAR',
+        'struct': 'STRUCT',
+        'pub': 'PUBLIC',
+        'fn': 'FUNCTION',
         **{t: f'TYPE_{t.upper()}' for t in types},
     }
 
@@ -45,8 +49,12 @@ class Lexer:
         'RPAREN',
         'SEMICOLON',
         'STRING',
+        'POINT',
+        'PLUS',
     ] + list(keywords.values())
 
+    t_PLUS     = r'\+'
+    t_POINT = r'\.'
     t_COLON = r':'
     t_COMMA = r','
     t_FAT_ARROW = r'=>'
@@ -88,6 +96,10 @@ class Lexer:
     def t_newline(self, t):
         r'\n+'
         t.lexer.lineno += len(t.value)
+
+    def t_COMMENTS(self, t):
+        r'//.* | ///.* | //!'
+        pass
 
     def t_error(self, t):
         print("Illegal character '%s'" % t.value[0])
