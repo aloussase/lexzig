@@ -308,6 +308,52 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
+    def test_lexer_can_lex_division_for_zero(self):
+        """
+        Test that the lexer can lex struct.
+        """
+        self.run_test(
+            input='''
+
+            comptime {
+                const a: i32 = 10;
+                const b: i32 = 0;
+                const c = a % b;
+                _ = c;
+            }
+            ''',
+            expected=[
+                {'type': 'COMPTIME',   'value': 'comptime'},
+                {'type': 'LCURLY', 'value': '{'},
+                {'type': 'CONST',   'value': 'const'},
+                {'type': 'IDENT',   'value': 'a'},
+                {'type': 'COLON',   'value': ':'},
+                {'type': 'TYPE_I32', 'value': 'i32'},
+                {'type': 'EQUAL',   'value': '='},
+                {'type': 'INTEGER', 'value': 10},
+                {'type': 'SEMICOLON', 'value': ';'},
+                {'type': 'CONST',   'value': 'const'},
+                {'type': 'IDENT',   'value': 'b'},
+                {'type': 'COLON',   'value': ':'},
+                {'type': 'TYPE_I32', 'value': 'i32'},
+                {'type': 'EQUAL',   'value': '='},
+                {'type': 'INTEGER', 'value': 0},
+                {'type': 'SEMICOLON', 'value': ';'},
+                {'type': 'CONST',   'value': 'const'},
+                {'type': 'IDENT',   'value': 'c'},
+                {'type': 'EQUAL',   'value': '='},
+                {'type': 'IDENT',   'value': 'a'},
+                {'type': 'MODULE',   'value': '%'},
+                {'type': 'IDENT',   'value': 'b'},
+                {'type': 'SEMICOLON', 'value': ';'},
+                {'type': 'IDENT',   'value': '_'},
+                {'type': 'EQUAL',   'value': '='},
+                {'type': 'IDENT',   'value': 'c'},
+                {'type': 'SEMICOLON', 'value': ';'},
+                {'type': 'RCURLY', 'value': '}'}
+            ]
+        )
+
     def test_lexer_can_lex_while_expressions(self):
         """
         Test that the lexer can lex while expressions.

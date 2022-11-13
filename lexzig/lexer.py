@@ -51,9 +51,11 @@ class Lexer:
         'STRING',
         'POINT',
         'PLUS',
+        'MODULE',
     ] + list(keywords.values())
 
-    t_PLUS     = r'\+'
+    t_PLUS = r'\+'
+    t_MODULE = r'%'
     t_POINT = r'\.'
     t_COLON = r':'
     t_COMMA = r','
