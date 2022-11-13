@@ -49,14 +49,14 @@ class Lexer:
         'RPAREN',
         'SEMICOLON',
         'STRING',
-        'POINT',
+        'DOT',
         'PLUS',
         'MODULE',
     ] + list(keywords.values())
 
     t_PLUS = r'\+'
     t_MODULE = r'%'
-    t_POINT = r'\.'
+    t_DOT = r'\.'
     t_COLON = r':'
     t_COMMA = r','
     t_FAT_ARROW = r'=>'

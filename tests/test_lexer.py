@@ -147,9 +147,9 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_type_inference(self):
+    def test_lexer_can_lex_function(self):
         """
-        Test that the lexer can lex type inference.
+        Test that the lexer can lex function.
         """
         self.run_test(
             input='''
@@ -180,9 +180,9 @@ class TestLexer(unittest.TestCase):
             ]
         )
     
-    def test_lexer_can_lex_function(self):
+    def test_lexer_can_lex_console_output(self):
         """
-        Test that the lexer can lex function.
+        Test that the lexer can lex console output.
         """
         self.run_test(
             input='''
@@ -209,14 +209,14 @@ class TestLexer(unittest.TestCase):
                 {'type': 'TYPE_VOID', 'value': 'void'},
                 {'type': 'LCURLY', 'value': '{'},
                 {'type': 'IDENT', 'value': 'std'},
-                {'type': 'POINT', 'value': '.'},
+                {'type': 'DOT', 'value': '.'},
                 {'type': 'IDENT', 'value': 'debug'},
-                {'type': 'POINT', 'value': '.'},
+                {'type': 'DOT', 'value': '.'},
                 {'type': 'IDENT', 'value': 'print'},
                 {'type': 'LPAREN', 'value': '('},
                 {'type': 'STRING', 'value': '"Hello, World!\n"'},
                 {'type': 'COMMA', 'value': ','},
-                {'type': 'POINT', 'value': '.'},
+                {'type': 'DOT', 'value': '.'},
                 {'type': 'LCURLY', 'value': '{'},
                 {'type': 'RCURLY', 'value': '}'},
                 {'type': 'RPAREN', 'value': ')'},
@@ -276,14 +276,14 @@ class TestLexer(unittest.TestCase):
                 {'type': 'RPAREN', 'value': ')'},
                 {'type': 'LCURLY', 'value': '{'},
                 {'type': 'RETURN', 'value': 'return'},
-                {'type': 'POINT', 'value': '.'},
+                {'type': 'DOT', 'value': '.'},
                 {'type': 'LCURLY', 'value': '{'},
-                {'type': 'POINT', 'value': '.'},
+                {'type': 'DOT', 'value': '.'},
                 {'type': 'IDENT', 'value': 'a'},
                 {'type': 'EQUAL', 'value': '='},
                 {'type': 'IDENT', 'value': 'a'},
                 {'type': 'COMMA', 'value': ','},
-                {'type': 'POINT', 'value': '.'},
+                {'type': 'DOT', 'value': '.'},
                 {'type': 'IDENT', 'value': 'b'},
                 {'type': 'EQUAL', 'value': '='},
                 {'type': 'IDENT', 'value': 'b'},
@@ -297,7 +297,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'IDENT', 'value': 's'},
                 {'type': 'EQUAL', 'value': '='},
                 {'type': 'IDENT', 'value': 'Estructura'},
-                {'type': 'POINT', 'value': '.'},
+                {'type': 'DOT', 'value': '.'},
                 {'type': 'IDENT', 'value': 'new'},
                 {'type': 'LPAREN', 'value': '('},
                 {'type': 'INTEGER', 'value': 1},
@@ -308,9 +308,9 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_division_for_zero(self):
+    def test_lexer_can_lex_comptime_block(self):
         """
-        Test that the lexer can lex struct.
+        Test that the lexer can lex comptime block.
         """
         self.run_test(
             input='''
