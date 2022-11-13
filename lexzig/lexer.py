@@ -113,13 +113,13 @@ class Lexer:
 
         return t
 
+    def t_COMMENTS(self, _: LexToken) -> None:
+        r'//.* | ///.* | //!'
+        pass
+
     def t_newline(self, t: LexToken) -> None:
         r'\n+'
         t.lexer.lineno += len(t.value)
-
-    def t_COMMENTS(self, t: LexToken) -> None:
-        r'//.* | ///.* | //!'
-        pass
 
     def t_error(self, t: LexToken) -> None:
         print("Illegal character '%s'" % t.value[0])

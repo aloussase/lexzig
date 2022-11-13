@@ -4,13 +4,13 @@ from typing import List, Dict, Literal, Any, TypedDict
 
 from lexzig.lexer import Lexer
 
-TestCase = TypedDict('TestCase', type=str, value=Any)
+TestCase = TypedDict('TestCase', {'type': str, 'value': Any})
 
 
 class TestLexer(unittest.TestCase):
     lexer = Lexer()
 
-    def run_test(self, *, input: str, expected: List[TestCase]):
+    def run_test(self, *, input: str, expected: List[TestCase]) -> None:
         tokens: List[LexToken] = self.lexer.lex(input)
 
         self.assertEqual(len(expected), len(tokens))
@@ -19,7 +19,7 @@ class TestLexer(unittest.TestCase):
             self.assertEqual(test['type'], actual.type)  # type: ignore
             self.assertEqual(test['value'], actual.value)  # type: ignore
 
-    def test_lexer_can_lex_special_variable_names(self):
+    def test_lexer_can_lex_special_variable_names(self) -> None:
         """
         Test that the lexer can lex special variable names.
         """
@@ -34,7 +34,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_builtin_functions(self):
+    def test_lexer_can_lex_builtin_functions(self) -> None:
         """
         Test that the lexer can lex builtin functions.
         """
@@ -49,7 +49,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_const_variable_declarations(self):
+    def test_lexer_can_lex_const_variable_declarations(self) -> None:
         """
         Test that the lexer can lex constant variable declarations.
         """
@@ -69,7 +69,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_variable_declarations(self):
+    def test_lexer_can_lex_variable_declarations(self) -> None:
         """
         Test that the lexer can lex variable declarations.
         """
@@ -84,7 +84,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_if_expressions(self):
+    def test_lexer_can_lex_if_expressions(self) -> None:
         """
         Test that the lexer can lex if expressions.
         """
@@ -111,7 +111,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_switch_expressions(self):
+    def test_lexer_can_lex_switch_expressions(self) -> None:
         """
         Test that the lexer can lex switch expressions.
         """
@@ -158,7 +158,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_enums(self):
+    def test_lexer_can_lex_enums(self) -> None:
         """
         Test that the lexer can lex enums.
         """
@@ -182,7 +182,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_the_input_example(self):
+    def test_lexer_can_lex_the_input_example(self) -> None:
         """
         Test that the lexer can lex the input example.
         """
@@ -267,7 +267,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'RCURLY', 'value': '}'},
             ])
 
-    def test_lexer_can_lex_function(self):
+    def test_lexer_can_lex_function(self) -> None:
         """
         Test that the lexer can lex function.
         """
@@ -299,7 +299,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_console_output(self):
+    def test_lexer_can_lex_console_output(self) -> None:
         """
         Test that the lexer can lex console output.
         """
@@ -343,7 +343,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_struct(self):
+    def test_lexer_can_lex_struct(self) -> None:
         """
         Test that the lexer can lex struct.
         """
@@ -426,7 +426,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_comptime_block(self):
+    def test_lexer_can_lex_comptime_block(self) -> None:
         """
         Test that the lexer can lex comptime block.
         """
@@ -472,7 +472,7 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_while_expressions(self):
+    def test_lexer_can_lex_while_expressions(self) -> None:
         """
         Test that the lexer can lex while expressions.
         """
@@ -500,32 +500,33 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_comment_superiorlevel(self):
+    def test_lexer_can_lex_comment_superiorlevel(self) -> None:
         """
         Test that the lexer can lex comment superior level.
         """
         self.run_test(
             input='//! Este módulo provee información acerca de las funciones date().',
-            expected= []
+            expected=[]
         )
 
-    def test_lexer_can_lex_comment_multiline(self):
+    def test_lexer_can_lex_comment_multiline(self) -> None:
         """
         Test that the lexer can lex comment multiline.
         """
         self.run_test(
             input='/// Este es un comentario\n/// multilinea.',
-            expected= []
+            expected=[]
         )
 
-    def test_lexer_can_lex_comment_line(self):
+    def test_lexer_can_lex_comment_line(self) -> None:
         """
         Test that the lexer can lex comment line.
         """
         self.run_test(
             input='//Los comentarios en Zig inician con un "//" y terminan en la siguiente línea.',
-            expected= []
+            expected=[]
         )
+
 
 if __name__ == '__main__':
     unittest.main()
