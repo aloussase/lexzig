@@ -35,6 +35,7 @@ class Lexer:
         'struct': 'STRUCT',
         'pub': 'PUB',
         'fn': 'FUNCTION',
+        'array' : 'ARRAY',
         **{t: f'TYPE_{t.upper()}' for t in types},
     }
 
@@ -63,6 +64,19 @@ class Lexer:
         'STRING',
         'PLUS',
         'MODULE',
+        'IS_EQUAL_TO',
+        'GREATER_THAN',
+        'LESS_THAN',
+        'IS_NOT_EQUAL',
+        'IS_NOT',
+        'MINUS',
+        'DIVISION',
+        'MULTIPLICATION',
+        'PLUS_EQUAL',
+        'MINUS_EQUAL',
+        'DIV_EQUAL',
+        'MULT_EQUAL',
+        'MOD_EQUAL'
     ] + list(keywords.values())
 
     t_AMPERSAND = r'&'
@@ -85,6 +99,19 @@ class Lexer:
     t_RPAREN = r'\)'
     t_SEMICOLON = r';'
     t_STRING = r'"[^"]*"'
+    t_IS_EQUAL_TO = r'=='
+    t_GREATER_THAN = r'\>'
+    t_LESS_THAN = r'\<'
+    t_IS_NOT_EQUAL = r'!='
+    t_IS_NOT = r'!'
+    t_MINUS = r'\-'
+    t_DIVISION = r'/'
+    t_MULTIPLICATION = r'\*'
+    t_PLUS_EQUAL = r'\+='
+    t_MINUS_EQUAL = r'\-='
+    t_MULT_EQUAL = r'\*='
+    t_DIV_EQUAL = r'/='
+    t_MOD_EQUAL = r'%='
 
     t_ignore = ' \t'
 
