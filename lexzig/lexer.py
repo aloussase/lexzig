@@ -35,7 +35,7 @@ class Lexer:
         'struct': 'STRUCT',
         'pub': 'PUB',
         'fn': 'FUNCTION',
-        'array' : 'ARRAY',
+        'for':'FOR'
         **{t: f'TYPE_{t.upper()}' for t in types},
     }
 
@@ -76,7 +76,9 @@ class Lexer:
         'MINUS_EQUAL',
         'DIV_EQUAL',
         'MULT_EQUAL',
-        'MOD_EQUAL'
+        'MOD_EQUAL',
+        'BAR',
+        'UNDERSCORE'
     ] + list(keywords.values())
 
     t_AMPERSAND = r'&'
@@ -93,7 +95,6 @@ class Lexer:
     t_LBRACE = r'\['
     t_LCURLY = r'{'
     t_LPAREN = r'\('
-    t_LT = r'<'
     t_RBRACE = r'\]'
     t_RCURLY = r'}'
     t_RPAREN = r'\)'
@@ -103,7 +104,6 @@ class Lexer:
     t_GREATER_THAN = r'\>'
     t_LESS_THAN = r'\<'
     t_IS_NOT_EQUAL = r'!='
-    t_IS_NOT = r'!'
     t_MINUS = r'\-'
     t_DIVISION = r'/'
     t_MULTIPLICATION = r'\*'
@@ -112,6 +112,8 @@ class Lexer:
     t_MULT_EQUAL = r'\*='
     t_DIV_EQUAL = r'/='
     t_MOD_EQUAL = r'%='
+    t_BAR = r'\|'
+    t_UNDERSCORE = r'_'
 
     t_ignore = ' \t'
 

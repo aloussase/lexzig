@@ -157,6 +157,32 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'},
             ]
         )
+    def test_lexer_can_lex_for_expressions(self) -> None:
+        """
+        Test that the lexer can lex for expressions.
+        """
+        self.run_test(
+            input='''
+            for(items) |value| {
+                sum=+value;
+            }
+            ''',
+            expected=[
+                {'type': 'FOR', 'value': 'for'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'IDENT', 'value': 'items'},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'BAR', 'bar': '|'},
+                {'type': 'IDENT', 'value': 'value'},
+                {'type': 'BAR', 'bar': '|'},
+                {'type': 'LCURLY', 'value': '{'},
+                {'type': 'IDENT', 'value': 'sum'},
+                {'type': 'PLUS_EQUAL', 'value': '+='},
+                {'type': 'IDENT', 'value': 'value'},
+                {'type': 'SEMICOLON', 'value': ';'},
+                {'type': 'RCURLY', 'value': '}'}
+            ]
+        )
 
     def test_lexer_can_lex_enums(self) -> None:
         """
@@ -181,7 +207,172 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'},
             ]
         )
+    
+    def test_lexer_can_lex_short_adittion_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a += b;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'PLUS_EQUAL', 'value': '+='},
+                {'type': 'IDENT', 'value': 'b'},
+                {'type': 'SEMICOLON', 'value': ';'}       
+            ]
+        )
 
+    def test_lexer_can_lex_adittion_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a = 1 + 2;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'INTEGER', 'value': '1'},
+                {'type': 'PLUS', 'value': '+'},
+                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'SEMICOLON', 'value': ';'}        
+            ]
+        )
+
+    def test_lexer_can_lex_short_subtraction_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a -= b;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'MINUS_EQUAL', 'value': '-='},
+                {'type': 'IDENT', 'value': 'b'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+    def test_lexer_can_lex_subtraction_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a = 3 - 2;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'INTEGER', 'value': '3'},
+                {'type': 'MINUS', 'value': '-'},
+                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        ) 
+
+    def test_lexer_can_lex_short_multiplication_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a *= b;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'MULT_EQUAL', 'value': '*='},
+                {'type': 'IDENT', 'value': 'b'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+    def test_lexer_can_lex_multiplication_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a = 3 * 2;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'INTEGER', 'value': '3'},
+                {'type': 'MULTIPLICATION', 'value': '*'},
+                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+    def test_lexer_can_lex_short_division_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a /= b;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'DIV_EQUAL', 'value': '/='},
+                {'type': 'IDENT', 'value': 'b'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+
+    def test_lexer_can_lex_division_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a = 4 / 2;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'INTEGER', 'value': '4'},
+                {'type': 'DIVISION', 'value': '/'},
+                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+    def test_lexer_can_lex_short_module_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a %= b;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'MOD_EQUAL', 'value': '%='},
+                {'type': 'IDENT', 'value': 'b'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+    def test_lexer_can_lex_module_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a = 4 % 2;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'INTEGER', 'value': '4'},
+                {'type': 'MODULE', 'value': '%'},
+                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'SEMICOLON', 'value': ';'}        
+            ]
+        ) 
+        
     def test_lexer_can_lex_the_input_example(self) -> None:
         """
         Test that the lexer can lex the input example.
@@ -340,6 +531,32 @@ class TestLexer(unittest.TestCase):
                 {'type': 'RPAREN', 'value': ')'},
                 {'type': 'SEMICOLON', 'value': ';'},
                 {'type': 'RCURLY', 'value': '}'},
+            ]
+        )
+    def test_lexer_can_lex_array_expressions(self) -> None:
+        """
+        Test that the lexer can lex for expressions.
+        """
+        self.run_test(
+            input='''
+            const items = [_]i32 { 4, 5, 3 };
+            ''',
+            expected=[
+                {'type': 'CONST', 'value': 'const'},
+                {'type': 'IDENT', 'value': 'items'},
+                {'type': 'EQUAL', 'value': '='},
+                {'type': 'LBRACE', 'value': '['},
+                {'type': 'UNDERSCORE', 'value': '_'},
+                {'type': 'RBRACE', 'value': ']'},
+                {'type': 'TYPE_I32', 'value': 'i32'},
+                {'type': 'LCURLY', 'value': '{'},
+                {'type': 'INTEGER', 'value': '4'},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'INTEGER', 'value': '5'},
+                {'type': 'COMMA', 'value': ','},
+                {'type': 'INTEGER', 'value': '3'},                
+                {'type': 'RCURLY', 'value': '}'},
+                {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
 
@@ -526,7 +743,85 @@ class TestLexer(unittest.TestCase):
             input='//Los comentarios en Zig inician con un "//" y terminan en la siguiente línea.',
             expected=[]
         )
-
+    def test_lexer_can_lex_equal_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a == b;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'IS_EQUAL_TO', 'value': '=='},
+                {'type': 'IDENT', 'value': 'b'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        ) 
+    def test_lexer_can_lex_diferent_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            a != b;
+            ''',
+            expected=[
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'IS_NOT_EQUAL', 'value': '!='},
+                {'type': 'IDENT', 'value': 'b'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+    def test_lexer_can_lex_not_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            !(a == b);
+            ''',
+            expected=[
+                {'type': 'BANG', 'value': '!'},
+                {'type': 'LPAREN', 'value': '('},
+                {'type': 'IDENT', 'value': 'a'},
+                {'type': 'IS_EQUAL_TO', 'value': '=='},
+                {'type': 'IDENT', 'value': 'b'},
+                {'type': 'RPAREN', 'value': ')'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+    def test_lexer_can_lex_greater_than_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            1 > 0;
+            ''',
+            expected=[
+                {'type': 'INTEGER', 'value': '1'},
+                {'type': 'GREATER_THAN', 'value': '>'},
+                {'type': 'INTEGER', 'value': '0'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+    def test_lexer_can_lex_less_than_expressions(self) -> None:
+        """
+        Test that the lexer can lex while expressions.
+        """
+        self.run_test(
+            input='''
+            2 < 5;
+            ''',
+            expected=[
+                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'LESS_THAN', 'value': '<'},
+                {'type': 'INTEGER', 'value': '5'},
+                {'type': 'SEMICOLON', 'value': ';'}
+            ]
+        )
+             
 
 if __name__ == '__main__':
     unittest.main()
