@@ -164,7 +164,7 @@ class TestLexer(unittest.TestCase):
         self.run_test(
             input='''
             for(items) |value| {
-                sum=+value;
+                sum+=value;
             }
             ''',
             expected=[
