@@ -9,10 +9,12 @@ class Lexer:
     """
 
     types: List[str] = [
-        'i8', 'u8', 'i16', 'u16', 'i32', 'u32', 'i64', 'u64', 'i128', 'u128', 'isize', 'usize',
-        'c_short', 'c_ushort', 'c_int', 'c_uint', 'c_long', 'c_ulong', 'c_longlong', 'c_ulonglong',
-        'c_longdouble', 'f16', 'f32', 'f64', 'f80', 'f128', 'bool', 'anyopaque', 'void', 'noreturn',
-        'type', 'anyerror', 'anytype', 'comptime_int', 'comptime_float', 'null', 'undefined'
+        'i8', 'u8', 'i16', 'u16', 'i32', 'u32', 'i64', 'u64', 'i128', 'u128',
+        'isize', 'usize', 'c_short', 'c_ushort', 'c_int', 'c_uint', 'c_long',
+        'c_ulong', 'c_longlong', 'c_ulonglong', 'c_longdouble', 'f16', 'f32',
+        'f64', 'f80', 'f128', 'bool', 'anyopaque', 'void', 'noreturn', 'type',
+        'anyerror', 'anytype', 'comptime_int', 'comptime_float', 'null',
+        'undefined'
     ]
 
     keywords: Dict[str, str] = {
@@ -35,7 +37,7 @@ class Lexer:
         'struct': 'STRUCT',
         'pub': 'PUB',
         'fn': 'FUNCTION',
-        'for':'FOR',
+        'for': 'FOR',
         **{t: f'TYPE_{t.upper()}' for t in types},
     }
 
@@ -66,7 +68,6 @@ class Lexer:
         'MODULE',
         'IS_EQUAL_TO',
         'GREATER_THAN',
-        'LT',
         'IS_NOT_EQUAL',
         'IS_NOT',
         'MINUS',
@@ -77,8 +78,7 @@ class Lexer:
         'DIV_EQUAL',
         'MULT_EQUAL',
         'MOD_EQUAL',
-        'BAR',
-        'UNDERSCORE'
+        'BAR'
     ] + list(keywords.values())
 
     t_AMPERSAND = r'&'

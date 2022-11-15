@@ -1,6 +1,6 @@
 from ply.lex import LexToken  # type: ignore
 import unittest
-from typing import List, Dict, Literal, Any, TypedDict
+from typing import List, Any, TypedDict
 
 from lexzig.lexer import Lexer
 
@@ -157,6 +157,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'},
             ]
         )
+
     def test_lexer_can_lex_for_expressions(self) -> None:
         """
         Test that the lexer can lex for expressions.
@@ -207,7 +208,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'},
             ]
         )
-    
+
     def test_lexer_can_lex_short_addition_expressions(self) -> None:
         """
         Test that the lexer can lex short addition expressions.
@@ -220,7 +221,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'IDENT', 'value': 'a'},
                 {'type': 'PLUS_EQUAL', 'value': '+='},
                 {'type': 'IDENT', 'value': 'b'},
-                {'type': 'SEMICOLON', 'value': ';'}       
+                {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
 
@@ -238,7 +239,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'INTEGER', 'value': 1},
                 {'type': 'PLUS', 'value': '+'},
                 {'type': 'INTEGER', 'value': 2},
-                {'type': 'SEMICOLON', 'value': ';'}        
+                {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
 
@@ -257,6 +258,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
+
     def test_lexer_can_lex_subtraction_expressions(self) -> None:
         """
         Test that the lexer can lex subtraction expressions.
@@ -273,7 +275,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'INTEGER', 'value': 2},
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
-        ) 
+        )
 
     def test_lexer_can_lex_short_multiplication_expressions(self) -> None:
         """
@@ -290,6 +292,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
+
     def test_lexer_can_lex_multiplication_expressions(self) -> None:
         """
         Test that the lexer can lex multiplication expressions.
@@ -307,6 +310,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
+
     def test_lexer_can_lex_short_division_expressions(self) -> None:
         """
         Test that the lexer can lex short division expressions.
@@ -340,6 +344,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
+
     def test_lexer_can_lex_short_module_expressions(self) -> None:
         """
         Test that the lexer can lex short module expressions.
@@ -355,6 +360,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
+
     def test_lexer_can_lex_module_expressions(self) -> None:
         """
         Test that the lexer can lex module expressions.
@@ -369,10 +375,10 @@ class TestLexer(unittest.TestCase):
                 {'type': 'INTEGER', 'value': 4},
                 {'type': 'MODULE', 'value': '%'},
                 {'type': 'INTEGER', 'value': 2},
-                {'type': 'SEMICOLON', 'value': ';'}        
+                {'type': 'SEMICOLON', 'value': ';'}
             ]
-        ) 
-        
+        )
+
     def test_lexer_can_lex_the_input_example(self) -> None:
         """
         Test that the lexer can lex the input example.
@@ -533,6 +539,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'RCURLY', 'value': '}'},
             ]
         )
+
     def test_lexer_can_lex_array_expressions(self) -> None:
         """
         Test that the lexer can lex array expressions.
@@ -554,7 +561,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'COMMA', 'value': ','},
                 {'type': 'INTEGER', 'value': 5},
                 {'type': 'COMMA', 'value': ','},
-                {'type': 'INTEGER', 'value': 3},                
+                {'type': 'INTEGER', 'value': 3},
                 {'type': 'RCURLY', 'value': '}'},
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
@@ -742,6 +749,7 @@ class TestLexer(unittest.TestCase):
             input='//Los comentarios en Zig inician con un "//" y terminan en la siguiente línea.',
             expected=[]
         )
+
     def test_lexer_can_lex_equal_expressions(self) -> None:
         """
         Test that the lexer can lex equal expressions.
@@ -756,7 +764,8 @@ class TestLexer(unittest.TestCase):
                 {'type': 'IDENT', 'value': 'b'},
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
-        ) 
+        )
+
     def test_lexer_can_lex_different_expressions(self) -> None:
         """
         Test that the lexer can lex different expressions.
@@ -772,6 +781,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
+
     def test_lexer_can_lex_not_expressions(self) -> None:
         """
         Test that the lexer can lex not expressions.
@@ -790,6 +800,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
+
     def test_lexer_can_lex_greater_than_expressions(self) -> None:
         """
         Test that the lexer can lex greater than expressions.
@@ -805,6 +816,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
+
     def test_lexer_can_lex_less_than_expressions(self) -> None:
         """
         Test that the lexer can lex less than expressions.
@@ -820,7 +832,7 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
-             
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,7 +3,7 @@ import readline  # For readline support with rich
 
 from rich.console import Console
 
-from lexzig.lexer import Lexer
+from lexzig.parser import Parser
 
 
 REPL_BANNER = """Welcome to the LexZig repl!
@@ -17,24 +17,18 @@ error_console = Console(stderr=True)
 
 
 def analyze_file(filename: str) -> None:
-    lexer = Lexer()
-
+    parser = Parser()
     with open(filename) as f:
-        result = lexer.lex(f.read())
-        for token in result:
-            print(token)
+        print(parser.parse(f.read()))
 
 
 def repl() -> None:
-    lexer = Lexer()
-
+    parser = Parser()
     console.print(REPL_BANNER, style="bold")
 
     while (line := console.input(":high_voltage: ")) != 'q':
-        result = lexer.lex(line)
-
-        for token in result:
-            console.print(token)
+        result = parser.parse(line)
+        print(result)
 
 
 def main() -> None:
