@@ -432,7 +432,6 @@ class TestLexer(unittest.TestCase):
         """
         self.run_test(
             input='''
-
             comptime {
                 const a: i32 = 10;
                 const b: i32 = 0;
