@@ -1,6 +1,7 @@
 import ply.yacc as yacc
 
 from lexzig.lexer import Lexer
+import lexzig.ast as ast
 
 
 class Parser:
@@ -20,25 +21,43 @@ class Parser:
 
     def p_program(self, p):
         '''
-        program : stmt stmts
+        program : stmts
+        '''
+        p[0] = ast.Program(stmts=p[1])
 
+    def p_stmts(self, p):
+        '''
         stmts : stmt stmts
               | empty
         '''
+        if len(p) == 3:
+            p[0] = p[2]
+            if not p[0]:
+                p[0] = []
+            p[0].insert(0, p[1])
 
     def p_stmt(self, p):
         '''
         stmt : assignment_stmt
              | functiondecl_stmt
         '''
+        p[0] = p[1]
 
     def p_assignment_stmt(self, p):
         '''
         assignment_stmt : vardecl IDENT assignment_stmt_tail
-                        | vardecl IDENT COLON typedecl assignment_stmt_tail
+                        | vardecl IDENT COLON compound_typedecl assignment_stmt_tail
+        '''
+        p[0] = ast.AssignmentStmt(
+            ident=p[2],
+            value=p[len(p) - 1]
+        )
 
+    def p_assignment_stmt_tail(self, p):
+        '''
         assignment_stmt_tail : EQUAL expression SEMICOLON
         '''
+        p[0] = p[2]
 
     # TODO: Error union type in return type.
     def p_functiondecl_stmt(self, p):
@@ -51,14 +70,14 @@ class Parser:
                     | param COMMA params_list
                     | empty
 
-        function_signature : access_modifier FUNCTION IDENT LPAREN params_list RPAREN typedecl
+        function_signature : access_modifier FUNCTION IDENT LPAREN params_list RPAREN compound_typedecl
 
         function_body : LCURLY stmts RCURLY
         '''
 
     def p_colon_type(self, p):
         '''
-        colon_type : COLON typedecl
+        colon_type : COLON compound_typedecl
                    | empty
         '''
 
@@ -75,7 +94,12 @@ class Parser:
                 | COMPTIME
         '''
 
-    # TODO: Arrays
+    def p_compound_typedecl(self, p):
+        '''
+        compound_typedecl : LBRACE RBRACE typedecl
+                          | LBRACE INTEGER RBRACE typedecl
+        '''
+
     def p_typedecl(self, p):
         '''
         typedecl : TYPE_I32
@@ -117,7 +141,7 @@ class Parser:
                  | TYPE_UNDEFINED
         '''
 
-    def p_expression(self, p):
+    def p_expression(self, p) -> None:
         '''
         expression : INTEGER PLUS INTEGER
                    | INTEGER MINUS INTEGER
@@ -129,21 +153,35 @@ class Parser:
             p[0] = p[1]
             return
 
-        op = p[2]
-        lhs = p[1]
-        rhs = p[3]
+        lhs, op, rhs = p[1:4]
 
         if op == '+':
-            p[0] = lhs + rhs
+            p[0] = ast.BinOp(lhs=lhs, op='+', rhs=rhs)
         elif op == '-':
-            p[0] = lhs - rhs
+            p[0] = ast.BinOp(lhs=lhs, op='-', rhs=rhs)
         elif op == '*':
-            p[0] = lhs * rhs
+            p[0] = ast.BinOp(lhs=lhs, op='*', rhs=rhs)
         elif op == '/':
-            p[0] = lhs / rhs
+            p[0] = ast.BinOp(lhs=lhs, op='/', rhs=rhs)
 
     def p_empty(self, _) -> None:
         'empty :'
+
+    def p_error(self, p) -> None:
+        '''
+        Skip tokens until we meet a synchronization point, a semicolon in this
+        case.
+        '''
+        if not p:
+            print('Unexpected end of file while parsing')
+            return
+
+        while True:
+            token = self.parser.token()
+            if not token or token.type == 'SEMICOLON':
+                break
+
+        self.parser.restart()
 
     def parse(self, input: str):
         return self.parser.parse(input, lexer=Lexer().lexer)
