@@ -66,7 +66,7 @@ class Lexer:
         'MODULE',
         'IS_EQUAL_TO',
         'GREATER_THAN',
-        'LESS_THAN',
+        'LT',
         'IS_NOT_EQUAL',
         'IS_NOT',
         'MINUS',
@@ -102,7 +102,7 @@ class Lexer:
     t_STRING = r'"[^"]*"'
     t_IS_EQUAL_TO = r'=='
     t_GREATER_THAN = r'\>'
-    t_LESS_THAN = r'\<'
+    t_LT = r'\<'
     t_IS_NOT_EQUAL = r'!='
     t_MINUS = r'\-'
     t_DIVISION = r'/'

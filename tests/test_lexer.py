@@ -235,9 +235,9 @@ class TestLexer(unittest.TestCase):
             expected=[
                 {'type': 'IDENT', 'value': 'a'},
                 {'type': 'EQUAL', 'value': '='},
-                {'type': 'INTEGER', 'value': '1'},
+                {'type': 'INTEGER', 'value': 1},
                 {'type': 'PLUS', 'value': '+'},
-                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'INTEGER', 'value': 2},
                 {'type': 'SEMICOLON', 'value': ';'}        
             ]
         )
@@ -268,9 +268,9 @@ class TestLexer(unittest.TestCase):
             expected=[
                 {'type': 'IDENT', 'value': 'a'},
                 {'type': 'EQUAL', 'value': '='},
-                {'type': 'INTEGER', 'value': '3'},
+                {'type': 'INTEGER', 'value': 3},
                 {'type': 'MINUS', 'value': '-'},
-                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'INTEGER', 'value': 2},
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         ) 
@@ -301,9 +301,9 @@ class TestLexer(unittest.TestCase):
             expected=[
                 {'type': 'IDENT', 'value': 'a'},
                 {'type': 'EQUAL', 'value': '='},
-                {'type': 'INTEGER', 'value': '3'},
+                {'type': 'INTEGER', 'value': 3},
                 {'type': 'MULTIPLICATION', 'value': '*'},
-                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'INTEGER', 'value': 2},
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
@@ -334,9 +334,9 @@ class TestLexer(unittest.TestCase):
             expected=[
                 {'type': 'IDENT', 'value': 'a'},
                 {'type': 'EQUAL', 'value': '='},
-                {'type': 'INTEGER', 'value': '4'},
+                {'type': 'INTEGER', 'value': 4},
                 {'type': 'DIVISION', 'value': '/'},
-                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'INTEGER', 'value': 2},
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
@@ -366,9 +366,9 @@ class TestLexer(unittest.TestCase):
             expected=[
                 {'type': 'IDENT', 'value': 'a'},
                 {'type': 'EQUAL', 'value': '='},
-                {'type': 'INTEGER', 'value': '4'},
+                {'type': 'INTEGER', 'value': 4},
                 {'type': 'MODULE', 'value': '%'},
-                {'type': 'INTEGER', 'value': '2'},
+                {'type': 'INTEGER', 'value': 2},
                 {'type': 'SEMICOLON', 'value': ';'}        
             ]
         ) 
@@ -550,11 +550,11 @@ class TestLexer(unittest.TestCase):
                 {'type': 'RBRACE', 'value': ']'},
                 {'type': 'TYPE_I32', 'value': 'i32'},
                 {'type': 'LCURLY', 'value': '{'},
-                {'type': 'INTEGER', 'value': '4'},
+                {'type': 'INTEGER', 'value': 4},
                 {'type': 'COMMA', 'value': ','},
-                {'type': 'INTEGER', 'value': '5'},
+                {'type': 'INTEGER', 'value': 5},
                 {'type': 'COMMA', 'value': ','},
-                {'type': 'INTEGER', 'value': '3'},                
+                {'type': 'INTEGER', 'value': 3},                
                 {'type': 'RCURLY', 'value': '}'},
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
@@ -800,9 +800,9 @@ class TestLexer(unittest.TestCase):
             1 > 0;
             ''',
             expected=[
-                {'type': 'INTEGER', 'value': '1'},
+                {'type': 'INTEGER', 'value': 1},
                 {'type': 'GREATER_THAN', 'value': '>'},
-                {'type': 'INTEGER', 'value': '0'},
+                {'type': 'INTEGER', 'value': 0},
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
@@ -815,9 +815,9 @@ class TestLexer(unittest.TestCase):
             2 < 5;
             ''',
             expected=[
-                {'type': 'INTEGER', 'value': '2'},
-                {'type': 'LESS_THAN', 'value': '<'},
-                {'type': 'INTEGER', 'value': '5'},
+                {'type': 'INTEGER', 'value': 2},
+                {'type': 'LT', 'value': '<'},
+                {'type': 'INTEGER', 'value': 5},
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         )
