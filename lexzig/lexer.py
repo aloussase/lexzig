@@ -35,7 +35,7 @@ class Lexer:
         'struct': 'STRUCT',
         'pub': 'PUB',
         'fn': 'FUNCTION',
-        'for':'FOR'
+        'for':'FOR',
         **{t: f'TYPE_{t.upper()}' for t in types},
     }
 

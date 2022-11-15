@@ -208,9 +208,9 @@ class TestLexer(unittest.TestCase):
             ]
         )
     
-    def test_lexer_can_lex_short_adittion_expressions(self) -> None:
+    def test_lexer_can_lex_short_addition_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex short addition expressions.
         """
         self.run_test(
             input='''
@@ -224,9 +224,9 @@ class TestLexer(unittest.TestCase):
             ]
         )
 
-    def test_lexer_can_lex_adittion_expressions(self) -> None:
+    def test_lexer_can_lex_addition_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex addition expressions.
         """
         self.run_test(
             input='''
@@ -244,7 +244,7 @@ class TestLexer(unittest.TestCase):
 
     def test_lexer_can_lex_short_subtraction_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex short subtraction expressions.
         """
         self.run_test(
             input='''
@@ -259,7 +259,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_subtraction_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex subtraction expressions.
         """
         self.run_test(
             input='''
@@ -277,7 +277,7 @@ class TestLexer(unittest.TestCase):
 
     def test_lexer_can_lex_short_multiplication_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex short multiplication expressions.
         """
         self.run_test(
             input='''
@@ -292,7 +292,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_multiplication_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex multiplication expressions.
         """
         self.run_test(
             input='''
@@ -309,7 +309,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_short_division_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex short division expressions.
         """
         self.run_test(
             input='''
@@ -325,7 +325,7 @@ class TestLexer(unittest.TestCase):
 
     def test_lexer_can_lex_division_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex division expressions.
         """
         self.run_test(
             input='''
@@ -342,7 +342,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_short_module_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex short module expressions.
         """
         self.run_test(
             input='''
@@ -357,7 +357,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_module_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex module expressions.
         """
         self.run_test(
             input='''
@@ -535,7 +535,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_array_expressions(self) -> None:
         """
-        Test that the lexer can lex for expressions.
+        Test that the lexer can lex array expressions.
         """
         self.run_test(
             input='''
@@ -745,7 +745,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_equal_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex equal expressions.
         """
         self.run_test(
             input='''
@@ -758,9 +758,9 @@ class TestLexer(unittest.TestCase):
                 {'type': 'SEMICOLON', 'value': ';'}
             ]
         ) 
-    def test_lexer_can_lex_diferent_expressions(self) -> None:
+    def test_lexer_can_lex_different_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex different expressions.
         """
         self.run_test(
             input='''
@@ -775,7 +775,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_not_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex not expressions.
         """
         self.run_test(
             input='''
@@ -793,7 +793,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_greater_than_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex greater than expressions.
         """
         self.run_test(
             input='''
@@ -808,7 +808,7 @@ class TestLexer(unittest.TestCase):
         )
     def test_lexer_can_lex_less_than_expressions(self) -> None:
         """
-        Test that the lexer can lex while expressions.
+        Test that the lexer can lex less than expressions.
         """
         self.run_test(
             input='''
