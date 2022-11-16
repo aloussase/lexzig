@@ -12,6 +12,7 @@ class Parser:
     tokens = Lexer.tokens
 
     precedence = (
+        ('nonassoc', 'LT'),
         ('left', 'PLUS', 'MINUS'),
         ('left', 'MULTIPLICATION', 'DIVISION'),
     )
@@ -40,6 +41,7 @@ class Parser:
         '''
         stmt : assignment_stmt
              | functiondecl_stmt
+             | expression_stmt
         '''
         p[0] = p[1]
 
@@ -47,9 +49,10 @@ class Parser:
         '''
         assignment_stmt : vardecl IDENT assignment_stmt_tail
                         | vardecl IDENT COLON compound_typedecl assignment_stmt_tail
+                        | UNDERSCORE assignment_stmt_tail
         '''
         p[0] = ast.AssignmentStmt(
-            ident=p[2],
+            ident=ast.Identifier(p[2] if len(p) > 3 else p[1]),
             value=p[len(p) - 1]
         )
 
@@ -59,21 +62,48 @@ class Parser:
         '''
         p[0] = p[2]
 
-    # TODO: Error union type in return type.
     def p_functiondecl_stmt(self, p):
         '''
         functiondecl_stmt : function_signature function_body
+        '''
+        name, params = p[1]
+        stmts = p[2]
+        p[0] = ast.FunctionDeclStmt(
+            name=ast.Identifier(name),
+            params=params,
+            body=stmts
+        )
 
-        param : IDENT colon_type
+    # TODO: Error union type in return type.
+    def p_function_param(self, p):
+        'function_param : IDENT colon_type'
+        p[0] = ast.Identifier(p[1])
 
-        params_list : param
-                    | param COMMA params_list
+    def p_function_param_list(self, p):
+        '''
+        function_param_list : function_param
+                    | function_param COMMA function_param_list
                     | empty
+        '''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        elif len(p) == 4:
+            p[0] = p[len(p) - 1]
+            p[0].insert(0, p[1])
 
-        function_signature : access_modifier FUNCTION IDENT LPAREN params_list RPAREN compound_typedecl
+    def p_function_signature(self, p):
+        '''
+        function_signature : access_modifier FUNCTION IDENT LPAREN function_param_list RPAREN compound_typedecl
+        '''
+        name = p[3]
+        params = p[5] if p[5] else []
+        p[0] = (name, params)
 
+    def p_function_body(self, p):
+        '''
         function_body : LCURLY stmts RCURLY
         '''
+        p[0] = p[2] if p[2] else []
 
     def p_colon_type(self, p):
         '''
@@ -98,6 +128,7 @@ class Parser:
         '''
         compound_typedecl : LBRACE RBRACE typedecl
                           | LBRACE INTEGER RBRACE typedecl
+                          | typedecl
         '''
 
     def p_typedecl(self, p):
@@ -141,18 +172,47 @@ class Parser:
                  | TYPE_UNDEFINED
         '''
 
+    def p_expression_stmt(self, p) -> None:
+        '''
+        expression_stmt : expression SEMICOLON
+        '''
+        p[0] = p[1]
+
     def p_expression(self, p) -> None:
         '''
-        expression : INTEGER PLUS INTEGER
-                   | INTEGER MINUS INTEGER
-                   | INTEGER MULTIPLICATION INTEGER
-                   | INTEGER DIVISION INTEGER
-                   | INTEGER
+        expression : arithmetic_expression
+                   | comparison_expression
+                   | if_expression
+                   | value_expression
         '''
-        if len(p) == 2:
-            p[0] = p[1]
-            return
+        p[0] = p[1]
 
+    def p_value_expression(self, p) -> None:
+        '''
+        value_expression : INTEGER
+                         | STRING
+                         | IDENT
+                         | CHAR
+        '''
+        # TODO: It would be better to check the token type.
+        # TODO: Test this.
+        if isinstance(p[1], int):
+            p[0] = ast.Integer(p[1])
+        elif isinstance(p[1], str):
+            if p[1][0] == "'":
+                p[0] = ast.Char(p[1])
+            elif p[1][0] == '"':
+                p[0] = ast.String(p[1])
+            else:
+                p[0] = ast.Identifier(p[1])
+
+    def p_arithmetic_expression(self, p) -> None:
+        '''
+        arithmetic_expression : INTEGER PLUS INTEGER
+                              | INTEGER MINUS INTEGER
+                              | INTEGER MULTIPLICATION INTEGER
+                              | INTEGER DIVISION INTEGER
+        '''
         lhs, op, rhs = p[1:4]
 
         if op == '+':
@@ -163,6 +223,18 @@ class Parser:
             p[0] = ast.BinOp(lhs=lhs, op='*', rhs=rhs)
         elif op == '/':
             p[0] = ast.BinOp(lhs=lhs, op='/', rhs=rhs)
+
+    def p_comparison_expression(self, p) -> None:
+        '''
+        comparison_expression : expression LT expression
+        '''
+        p[0] = ast.BinOp(lhs=p[1], op=p[2], rhs=p[3])
+
+    def p_if_expression(self, p):
+        '''
+        if_expression : IF LPAREN expression RPAREN expression ELSE expression
+        '''
+        p[0] = ast.IfExpr(condition=p[3], ifBranch=p[5], elseBranch=p[7])
 
     def p_empty(self, _) -> None:
         'empty :'
