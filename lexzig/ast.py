@@ -2,17 +2,24 @@ from dataclasses import dataclass
 from typing import List
 
 
-class Expr:
+class Stmt:
     pass
 
 
+class Expr(Stmt):
+    pass
+
+
+class SwitchMatchTarget: pass
+
+
 @dataclass
-class Identifier:
+class Identifier(Expr):
     name: str
 
 
 @dataclass
-class Integer(Expr):
+class Integer(Expr, SwitchMatchTarget):
     n: int
 
 
@@ -40,8 +47,37 @@ class IfExpr(Expr):
     elseBranch: Expr
 
 
-class Stmt:
-    pass
+@dataclass
+class SwitchRange(SwitchMatchTarget):
+    start: int
+    end: int
+
+
+@dataclass
+class SwitchList(SwitchMatchTarget):
+    elems: List[SwitchMatchTarget]
+
+
+@dataclass
+class SwitchElse(SwitchMatchTarget): pass
+
+
+@dataclass
+class SwitchBranch:
+    match: SwitchMatchTarget
+    body: Expr
+
+
+@dataclass
+class SwitchExpr(Expr):
+    target: Expr
+    branches: List[SwitchBranch]
+
+
+@dataclass
+class FunctionCall(Expr):
+    name: Identifier
+    args: List[Expr]
 
 
 @dataclass

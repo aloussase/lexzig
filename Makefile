@@ -14,3 +14,6 @@ run:
 
 typecheck:
 	$(MYPY) lexzig
+
+clean:
+	$(RM) **/*.out **/parsetab.py

@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 
-from lexzig.lexer import Lexer
 import lexzig.ast as ast
+from lexzig.lexer import Lexer
 
 
 class Parser:
@@ -18,19 +18,19 @@ class Parser:
     )
 
     def __init__(self):
-        self.parser = yacc.yacc(module=self)
+        self.parser = yacc.yacc(module=self, debug=True)
 
     def p_program(self, p):
-        '''
+        """
         program : stmts
-        '''
+        """
         p[0] = ast.Program(stmts=p[1])
 
     def p_stmts(self, p):
-        '''
+        """
         stmts : stmt stmts
               | empty
-        '''
+        """
         if len(p) == 3:
             p[0] = p[2]
             if not p[0]:
@@ -38,34 +38,34 @@ class Parser:
             p[0].insert(0, p[1])
 
     def p_stmt(self, p):
-        '''
+        """
         stmt : assignment_stmt
              | functiondecl_stmt
              | expression_stmt
-        '''
+        """
         p[0] = p[1]
 
     def p_assignment_stmt(self, p):
-        '''
+        """
         assignment_stmt : vardecl IDENT assignment_stmt_tail
                         | vardecl IDENT COLON compound_typedecl assignment_stmt_tail
                         | UNDERSCORE assignment_stmt_tail
-        '''
+        """
         p[0] = ast.AssignmentStmt(
             ident=ast.Identifier(p[2] if len(p) > 3 else p[1]),
             value=p[len(p) - 1]
         )
 
     def p_assignment_stmt_tail(self, p):
-        '''
+        """
         assignment_stmt_tail : EQUAL expression SEMICOLON
-        '''
+        """
         p[0] = p[2]
 
     def p_functiondecl_stmt(self, p):
-        '''
+        """
         functiondecl_stmt : function_signature function_body
-        '''
+        """
         name, params = p[1]
         stmts = p[2]
         p[0] = ast.FunctionDeclStmt(
@@ -80,11 +80,11 @@ class Parser:
         p[0] = ast.Identifier(p[1])
 
     def p_function_param_list(self, p):
-        '''
+        """
         function_param_list : function_param
                     | function_param COMMA function_param_list
                     | empty
-        '''
+        """
         if len(p) == 2:
             p[0] = [p[1]]
         elif len(p) == 4:
@@ -92,47 +92,47 @@ class Parser:
             p[0].insert(0, p[1])
 
     def p_function_signature(self, p):
-        '''
+        """
         function_signature : access_modifier FUNCTION IDENT LPAREN function_param_list RPAREN compound_typedecl
-        '''
+        """
         name = p[3]
         params = p[5] if p[5] else []
         p[0] = (name, params)
 
     def p_function_body(self, p):
-        '''
+        """
         function_body : LCURLY stmts RCURLY
-        '''
+        """
         p[0] = p[2] if p[2] else []
 
     def p_colon_type(self, p):
-        '''
+        """
         colon_type : COLON compound_typedecl
                    | empty
-        '''
+        """
 
     def p_access_modifier(self, p):
-        '''
+        """
         access_modifier : PUB
                         | empty
-        '''
+        """
 
     def p_vardecl(self, p):
-        '''
+        """
         vardecl : VAR
                 | CONST
                 | COMPTIME
-        '''
+        """
 
     def p_compound_typedecl(self, p):
-        '''
+        """
         compound_typedecl : LBRACE RBRACE typedecl
                           | LBRACE INTEGER RBRACE typedecl
                           | typedecl
-        '''
+        """
 
     def p_typedecl(self, p):
-        '''
+        """
         typedecl : TYPE_I32
                  | TYPE_I8
                  | TYPE_U8
@@ -170,30 +170,32 @@ class Parser:
                  | TYPE_COMPTIME_FLOAT
                  | TYPE_NULL
                  | TYPE_UNDEFINED
-        '''
+        """
 
     def p_expression_stmt(self, p) -> None:
-        '''
+        """
         expression_stmt : expression SEMICOLON
-        '''
+        """
         p[0] = p[1]
 
     def p_expression(self, p) -> None:
-        '''
+        """
         expression : arithmetic_expression
                    | comparison_expression
                    | if_expression
+                   | switch_expression
+                   | function_call
                    | value_expression
-        '''
+        """
         p[0] = p[1]
 
     def p_value_expression(self, p) -> None:
-        '''
+        """
         value_expression : INTEGER
                          | STRING
                          | IDENT
                          | CHAR
-        '''
+        """
         # TODO: It would be better to check the token type.
         # TODO: Test this.
         if isinstance(p[1], int):
@@ -207,12 +209,12 @@ class Parser:
                 p[0] = ast.Identifier(p[1])
 
     def p_arithmetic_expression(self, p) -> None:
-        '''
+        """
         arithmetic_expression : INTEGER PLUS INTEGER
                               | INTEGER MINUS INTEGER
                               | INTEGER MULTIPLICATION INTEGER
                               | INTEGER DIVISION INTEGER
-        '''
+        """
         lhs, op, rhs = p[1:4]
 
         if op == '+':
@@ -225,16 +227,89 @@ class Parser:
             p[0] = ast.BinOp(lhs=lhs, op='/', rhs=rhs)
 
     def p_comparison_expression(self, p) -> None:
-        '''
+        """
         comparison_expression : expression LT expression
-        '''
+        """
         p[0] = ast.BinOp(lhs=p[1], op=p[2], rhs=p[3])
 
     def p_if_expression(self, p):
-        '''
+        """
         if_expression : IF LPAREN expression RPAREN expression ELSE expression
-        '''
+        """
         p[0] = ast.IfExpr(condition=p[3], ifBranch=p[5], elseBranch=p[7])
+
+    def p_function_call(self, p):
+        """
+        function_call : function_name LPAREN function_args RPAREN
+        """
+        p[0] = ast.FunctionCall(name=ast.Identifier(p[1]), args=p[3])
+
+    def p_function_name(self, p):
+        """
+        function_name : IDENT
+                      | BUILTIN_FUNCTION
+        """
+        p[0] = p[1]
+
+    def p_function_args(self, p):
+        """
+        function_args : expression COMMA function_args
+                      | expression
+        """
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = [p[1]] + p[3]
+
+    def p_switch_expression(self, p):
+        """
+        switch_expression : SWITCH LPAREN expression RPAREN LCURLY switch_branches RCURLY
+        """
+        p[0] = ast.SwitchExpr(target=p[3], branches=p[6])
+
+    def p_switch_branches(self, p):
+        """
+        switch_branches : switch_branch COMMA switch_branches
+                        | switch_branch COMMA
+                        | switch_branch
+        """
+        if 2 <= len(p) <= 3:
+            p[0] = [p[1]]
+        else:
+            p[0] = [p[1]] + p[3]
+
+    def p_switch_branch(self, p):
+        """
+        switch_branch : switch_match_target FAT_ARROW expression
+        """
+        p[0] = ast.SwitchBranch(match=p[1], body=p[3])
+
+    def p_switch_match_target(self, p):
+        """
+        switch_match_target : switch_range
+                            | switch_list
+                            | ELSE
+        """
+        if p[1] == 'else':
+            p[0] = ast.SwitchElse()
+        else:
+            p[0] = p[1]
+
+    def p_switch_range(self, p):
+        """
+        switch_range : INTEGER ELLIPSIS INTEGER
+        """
+        p[0] = ast.SwitchRange(start=p[1], end=p[3])
+
+    def p_switch_list(self, p):
+        """
+        switch_list : INTEGER COMMA switch_list
+                    | INTEGER
+        """
+        if len(p) == 2:
+            p[0] = ast.SwitchList(elems=[ast.Integer(p[1])])
+        else:
+            p[0] = ast.SwitchList(elems=[ast.Integer(p[1])] + p[3].elems)
 
     def p_empty(self, _) -> None:
         'empty :'

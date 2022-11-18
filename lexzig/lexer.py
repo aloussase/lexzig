@@ -1,6 +1,7 @@
+from typing import List, Dict, Any
+
 import ply.lex as pylex  # type: ignore
 from ply.lex import LexToken
-from typing import List, Dict, Any
 
 
 class Lexer:
@@ -35,51 +36,49 @@ class Lexer:
         'pub': 'PUB',
         'var': 'VAR',
         'struct': 'STRUCT',
-        'pub': 'PUB',
-        'fn': 'FUNCTION',
         'for': 'FOR',
         **{t: f'TYPE_{t.upper()}' for t in types},
     }
 
     tokens: List[str] = [
-        'UNDERSCORE',
-        'AMPERSAND',
-        'BANG',
-        'BUILTIN_FUNCTION',
-        'COLON',
-        'COMMA',
-        'CHAR',
-        'DOT',
-        'EQUAL',
-        'ELLIPSIS',
-        'FAT_ARROW',
-        'IDENT',
-        'INTEGER',
-        'LBRACE',
-        'LCURLY',
-        'LPAREN',
-        'LT',
-        'RBRACE',
-        'RCURLY',
-        'RPAREN',
-        'SEMICOLON',
-        'STRING',
-        'PLUS',
-        'MODULE',
-        'IS_EQUAL_TO',
-        'GREATER_THAN',
-        'IS_NOT_EQUAL',
-        'IS_NOT',
-        'MINUS',
-        'DIVISION',
-        'MULTIPLICATION',
-        'PLUS_EQUAL',
-        'MINUS_EQUAL',
-        'DIV_EQUAL',
-        'MULT_EQUAL',
-        'MOD_EQUAL',
-        'BAR'
-    ] + list(keywords.values())
+                            'UNDERSCORE',
+                            'AMPERSAND',
+                            'BANG',
+                            'BUILTIN_FUNCTION',
+                            'COLON',
+                            'COMMA',
+                            'CHAR',
+                            'DOT',
+                            'EQUAL',
+                            'ELLIPSIS',
+                            'FAT_ARROW',
+                            'IDENT',
+                            'INTEGER',
+                            'LBRACE',
+                            'LCURLY',
+                            'LPAREN',
+                            'LT',
+                            'RBRACE',
+                            'RCURLY',
+                            'RPAREN',
+                            'SEMICOLON',
+                            'STRING',
+                            'PLUS',
+                            'MODULE',
+                            'IS_EQUAL_TO',
+                            'GREATER_THAN',
+                            'IS_NOT_EQUAL',
+                            'IS_NOT',
+                            'MINUS',
+                            'DIVISION',
+                            'MULTIPLICATION',
+                            'PLUS_EQUAL',
+                            'MINUS_EQUAL',
+                            'DIV_EQUAL',
+                            'MULT_EQUAL',
+                            'MOD_EQUAL',
+                            'BAR'
+                        ] + list(keywords.values())
 
     t_AMPERSAND = r'&'
     t_BANG = r'!'
