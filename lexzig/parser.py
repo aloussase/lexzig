@@ -42,8 +42,15 @@ class Parser:
         stmt : assignment_stmt
              | functiondecl_stmt
              | expression_stmt
+             | return_stmt
         """
         p[0] = p[1]
+
+    def p_return_stmt(self, p):
+        """
+        return_stmt : RETURN expression SEMICOLON
+        """
+        p[0] = ast.ReturnStmt(p[2])
 
     def p_assignment_stmt(self, p):
         """
@@ -59,6 +66,11 @@ class Parser:
     def p_assignment_stmt_tail(self, p):
         """
         assignment_stmt_tail : EQUAL expression SEMICOLON
+                             | MINUS_EQUAL expression SEMICOLON
+                             | MOD_EQUAL expression SEMICOLON
+                             | MULT_EQUAL expression SEMICOLON
+                             | PLUS_EQUAL expression SEMICOLON
+                             | DIV_EQUAL expression SEMICOLON
         """
         p[0] = p[2]
 
@@ -229,6 +241,10 @@ class Parser:
     def p_comparison_expression(self, p) -> None:
         """
         comparison_expression : expression LT expression
+                              | expression IS_EQUAL_TO expression
+                              | expression IS_NOT expression
+                              | expression IS_NOT_EQUAL expression
+                              | expression GREATER_THAN expression
         """
         p[0] = ast.BinOp(lhs=p[1], op=p[2], rhs=p[3])
 

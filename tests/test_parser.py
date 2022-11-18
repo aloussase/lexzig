@@ -2,7 +2,7 @@ import unittest
 
 from lexzig.ast import (Program, FunctionDeclStmt, Identifier, AssignmentStmt,
                         Integer, IfExpr, BinOp, SwitchExpr, SwitchBranch, SwitchRange, SwitchList, FunctionCall,
-                        SwitchElse
+                        SwitchElse, ReturnStmt
                         )
 from lexzig.parser import Parser
 
@@ -94,3 +94,10 @@ class TestParser(unittest.TestCase):
                 ]
             ))
         ]), result)
+
+    def test_parser_can_parse_return_stmts(self):
+        input = 'return 42;'
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(Program(stmts=[ReturnStmt(value=Integer(42))]), result)

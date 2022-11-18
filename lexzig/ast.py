@@ -94,5 +94,10 @@ class FunctionDeclStmt(Stmt):
 
 
 @dataclass
+class ReturnStmt(Stmt):
+    value: Expr
+
+
+@dataclass
 class Program:
     stmts: List[Stmt]
