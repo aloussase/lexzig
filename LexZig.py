@@ -1,10 +1,8 @@
 from argparse import ArgumentParser
-import readline  # For readline support with rich
 
 from rich.console import Console
 
 from lexzig.parser import Parser
-
 
 REPL_BANNER = """Welcome to the LexZig repl!
 
@@ -19,7 +17,7 @@ error_console = Console(stderr=True)
 def analyze_file(filename: str) -> None:
     parser = Parser()
     with open(filename) as f:
-        print(parser.parse(f.read()))
+        console.print(parser.parse(f.read()))
 
 
 def repl() -> None:
@@ -28,7 +26,7 @@ def repl() -> None:
 
     while (line := console.input(":high_voltage: ")) != 'q':
         result = parser.parse(line)
-        print(result)
+        console.print(result)
 
 
 def main() -> None:

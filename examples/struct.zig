@@ -6,3 +6,5 @@ const Circle = struct {
         return Circle{ .x = x, .y = y };
     }
 };
+
+pub fn main() void {}

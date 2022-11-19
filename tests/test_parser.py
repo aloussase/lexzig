@@ -10,6 +10,25 @@ from lexzig.parser import Parser
 class TestParser(unittest.TestCase):
     parser = Parser()
 
+    # TODO: Test arithmetic expressions
+    # TODO: Test comparison operators
+    # TODO: Test export modifier in functions and variable declarations
+
+    def test_parser_can_parse_functions_with_export_modifiers(self):
+        input = '''
+        pub export fn div(x: i32, y: i32) i32 {
+            return x / y; 
+        }
+        '''
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(Program(stmts=[FunctionDeclStmt(
+            name=Identifier('div'),
+            params=[Identifier('x'), Identifier('y')],
+            body=[ReturnStmt(value=BinOp(Identifier('x'), '/', Identifier('y')))]
+        )]), result)
+
     def test_parser_can_parse_function_declarations(self):
         input = '''
         pub fn main(args: []u8) void {

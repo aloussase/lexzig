@@ -17,7 +17,7 @@ class Parser:
         ('left', 'ELSE'),
         ('nonassoc', 'LT', 'IS_EQUAL_TO', 'GREATER_THAN', 'IS_NOT_EQUAL'),
         ('left', 'PLUS', 'MINUS'),
-        ('left', 'MULTIPLICATION', 'DIVISION'),
+        ('left', 'MULTIPLICATION', 'DIVISION', 'MODULE'),
     )
 
     def __init__(self):
@@ -57,7 +57,7 @@ class Parser:
     def p_assignment_stmt(self, p):
         """
         assignment_stmt : vardecl IDENT assignment_stmt_tail
-                        | vardecl IDENT COLON compound_typedecl assignment_stmt_tail
+                        | vardecl IDENT COLON error_union_typedecl assignment_stmt_tail
                         | UNDERSCORE assignment_stmt_tail
         """
         p[0] = ast.AssignmentStmt(
@@ -88,7 +88,6 @@ class Parser:
             body=stmts
         )
 
-    # TODO: Error union type in return type.
     def p_function_param(self, p):
         """function_param : IDENT COLON compound_typedecl"""
         p[0] = ast.Identifier(p[1])
@@ -106,9 +105,17 @@ class Parser:
 
     def p_function_signature(self, p):
         """
-        function_signature : access_modifier FUNCTION IDENT LPAREN function_param_list RPAREN compound_typedecl
+        function_signature : PUB EXPORT FUNCTION IDENT LPAREN function_param_list RPAREN error_union_typedecl
+                           | PUB FUNCTION IDENT LPAREN function_param_list RPAREN error_union_typedecl
+                           | EXPORT FUNCTION IDENT LPAREN function_param_list RPAREN error_union_typedecl
+                           | FUNCTION IDENT LPAREN function_param_list RPAREN error_union_typedecl
         """
-        p[0] = (p[3], p[5])
+        if len(p) == 9:
+            p[0] = (p[4], p[6])
+        elif len(p) == 8:
+            p[0] = (p[3], p[5])
+        else:
+            p[0] = (p[2], p[4])
 
     def p_function_body(self, p):
         """
@@ -116,17 +123,17 @@ class Parser:
         """
         p[0] = p[2]
 
-    def p_access_modifier(self, p):
-        """
-        access_modifier : PUB
-                        | empty
-        """
-
     def p_vardecl(self, p):
         """
-        vardecl : VAR
-                | CONST
-                | COMPTIME
+        vardecl : EXPORT vardecl_tail
+                | vardecl_tail
+        """
+
+    def p_vardecl_tail(self, p):
+        """
+        vardecl_tail : VAR
+                     | CONST
+                     | COMPTIME
         """
 
     def p_compound_typedecl(self, p):
@@ -135,6 +142,13 @@ class Parser:
                           | LBRACE INTEGER RBRACE typedecl
                           | typedecl
                           | IDENT
+        """
+
+    def p_error_union_typedecl(self, p):
+        """
+        error_union_typedecl : BANG compound_typedecl
+                             | IDENT BANG compound_typedecl
+                             | compound_typedecl
         """
 
     def p_typedecl(self, p):
@@ -218,10 +232,11 @@ class Parser:
 
     def p_arithmetic_expression(self, p) -> None:
         """
-        arithmetic_expression : INTEGER PLUS INTEGER
-                              | INTEGER MINUS INTEGER
-                              | INTEGER MULTIPLICATION INTEGER
-                              | INTEGER DIVISION INTEGER
+        arithmetic_expression : arithmetic_expression_operand PLUS           arithmetic_expression_operand
+                              | arithmetic_expression_operand MINUS          arithmetic_expression_operand
+                              | arithmetic_expression_operand MULTIPLICATION arithmetic_expression_operand
+                              | arithmetic_expression_operand DIVISION       arithmetic_expression_operand
+                              | arithmetic_expression_operand MODULE         arithmetic_expression_operand
         """
         lhs, op, rhs = p[1:4]
 
@@ -233,6 +248,16 @@ class Parser:
             p[0] = ast.BinOp(lhs=lhs, op='*', rhs=rhs)
         elif op == '/':
             p[0] = ast.BinOp(lhs=lhs, op='/', rhs=rhs)
+
+    def p_arithmetic_expression_operand(self, p) -> None:
+        """
+        arithmetic_expression_operand : INTEGER
+                                      | IDENT
+        """
+        if isinstance(p[1], int):
+            p[0] = ast.Integer(p[1])
+        else:
+            p[0] = ast.Identifier(p[1])
 
     # TODO: Find another way to parse these, lots of S/R conflicts.
     def p_comparison_expression(self, p) -> None:
