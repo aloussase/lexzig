@@ -12,7 +12,10 @@ class Parser:
     tokens = Lexer.tokens
 
     precedence = (
-        ('nonassoc', 'LT'),
+        # Make else bind weaker than other operators to avoid conflicts
+        # with if expressions.
+        ('left', 'ELSE'),
+        ('nonassoc', 'LT', 'IS_EQUAL_TO', 'GREATER_THAN', 'IS_NOT_EQUAL'),
         ('left', 'PLUS', 'MINUS'),
         ('left', 'MULTIPLICATION', 'DIVISION'),
     )
@@ -32,10 +35,9 @@ class Parser:
               | empty
         """
         if len(p) == 3:
-            p[0] = p[2]
-            if not p[0]:
-                p[0] = []
-            p[0].insert(0, p[1])
+            p[0] = [p[1]] + p[2]
+        else:
+            p[0] = []
 
     def p_stmt(self, p):
         """
@@ -88,40 +90,31 @@ class Parser:
 
     # TODO: Error union type in return type.
     def p_function_param(self, p):
-        'function_param : IDENT colon_type'
+        """function_param : IDENT COLON compound_typedecl"""
         p[0] = ast.Identifier(p[1])
 
     def p_function_param_list(self, p):
         """
-        function_param_list : function_param
-                    | function_param COMMA function_param_list
-                    | empty
+        function_param_list : function_param_list function_param COMMA
+                            | function_param_list function_param
+                            | empty
         """
-        if len(p) == 2:
-            p[0] = [p[1]]
-        elif len(p) == 4:
-            p[0] = p[len(p) - 1]
-            p[0].insert(0, p[1])
+        if 3 <= len(p) <= 4:
+            p[0] = p[1] + [p[2]]
+        else:
+            p[0] = []
 
     def p_function_signature(self, p):
         """
         function_signature : access_modifier FUNCTION IDENT LPAREN function_param_list RPAREN compound_typedecl
         """
-        name = p[3]
-        params = p[5] if p[5] else []
-        p[0] = (name, params)
+        p[0] = (p[3], p[5])
 
     def p_function_body(self, p):
         """
         function_body : LCURLY stmts RCURLY
         """
-        p[0] = p[2] if p[2] else []
-
-    def p_colon_type(self, p):
-        """
-        colon_type : COLON compound_typedecl
-                   | empty
-        """
+        p[0] = p[2]
 
     def p_access_modifier(self, p):
         """
@@ -141,6 +134,7 @@ class Parser:
         compound_typedecl : LBRACE RBRACE typedecl
                           | LBRACE INTEGER RBRACE typedecl
                           | typedecl
+                          | IDENT
         """
 
     def p_typedecl(self, p):
@@ -196,6 +190,8 @@ class Parser:
                    | comparison_expression
                    | if_expression
                    | switch_expression
+                   | struct_decl
+                   | struct_instantiation
                    | function_call
                    | value_expression
         """
@@ -238,11 +234,11 @@ class Parser:
         elif op == '/':
             p[0] = ast.BinOp(lhs=lhs, op='/', rhs=rhs)
 
+    # TODO: Find another way to parse these, lots of S/R conflicts.
     def p_comparison_expression(self, p) -> None:
         """
         comparison_expression : expression LT expression
                               | expression IS_EQUAL_TO expression
-                              | expression IS_NOT expression
                               | expression IS_NOT_EQUAL expression
                               | expression GREATER_THAN expression
         """
@@ -327,8 +323,63 @@ class Parser:
         else:
             p[0] = ast.SwitchList(elems=[ast.Integer(p[1])] + p[3].elems)
 
+    def p_struct_decl(self, p):
+        """
+        struct_decl : STRUCT LCURLY struct_fields struct_methods RCURLY
+        """
+        p[0] = ast.StructDeclaration(fields=p[3], methods=p[4])
+
+    def p_struct_fields(self, p):
+        """
+        struct_fields : struct_fields struct_field COMMA
+                      | empty
+        """
+        if len(p) == 4:
+            p[0] = p[1] + [p[2]]
+        else:
+            p[0] = []
+
+    def p_struct_field(self, p):
+        """
+        struct_field : IDENT COLON compound_typedecl
+        """
+        p[0] = ast.Identifier(p[1])
+
+    def p_struct_methods(self, p):
+        """
+        struct_methods : struct_methods functiondecl_stmt
+                       | empty
+        """
+        if len(p) == 3:
+            p[0] = [p[2]] + p[1]
+        else:
+            p[0] = []
+
+    def p_struct_instantiation(self, p):
+        """
+        struct_instantiation : IDENT LCURLY struct_initializer_pairs RCURLY
+        """
+        p[0] = ast.StructInstantiation(name=ast.Identifier(p[1]), field_initializers=p[3])
+
+    def p_struct_initializer_pairs(self, p):
+        """
+        struct_initializer_pairs : struct_initializer_pairs struct_initializer_pair COMMA
+                                 | struct_initializer_pairs struct_initializer_pair
+                                 | empty
+        """
+        if 3 <= len(p) <= 4:
+            p[0] = p[1] + [p[2]]
+        else:
+            p[0] = []
+
+    def p_struct_initializer_pair(self, p):
+        """
+        struct_initializer_pair : DOT IDENT EQUAL expression
+        """
+        p[0] = ast.StructInitializerPair(field_name=p[2], value=p[4])
+
     def p_empty(self, _) -> None:
-        'empty :'
+        """empty :"""
 
     def p_error(self, p) -> None:
         '''

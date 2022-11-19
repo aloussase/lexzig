@@ -2,7 +2,7 @@ import unittest
 
 from lexzig.ast import (Program, FunctionDeclStmt, Identifier, AssignmentStmt,
                         Integer, IfExpr, BinOp, SwitchExpr, SwitchBranch, SwitchRange, SwitchList, FunctionCall,
-                        SwitchElse, ReturnStmt
+                        SwitchElse, ReturnStmt, StructDeclaration, StructInstantiation, StructInitializerPair
                         )
 from lexzig.parser import Parser
 
@@ -101,3 +101,41 @@ class TestParser(unittest.TestCase):
         result = self.parser.parse(input)
 
         self.assertEqual(Program(stmts=[ReturnStmt(value=Integer(42))]), result)
+
+    def test_parser_can_parse_structs(self):
+        input = '''
+        const Circle = struct {
+            x: i32,
+            y: i32,
+            
+            pub fn new(x: i32, y: i32) Circle {
+                return Circle{
+                    .x = x,
+                    .y = y
+                }; 
+            }
+        };
+        '''
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(Program(stmts=[
+            AssignmentStmt(ident=Identifier('Circle'), value=StructDeclaration(
+                fields=[Identifier('x'), Identifier('y')],
+                methods=[
+                    FunctionDeclStmt(
+                        name=Identifier('new'),
+                        params=[Identifier('x'), Identifier('y')],
+                        body=[
+                            ReturnStmt(value=StructInstantiation(
+                                name=Identifier('Circle'),
+                                field_initializers=[
+                                    StructInitializerPair('x', Identifier('x')),
+                                    StructInitializerPair('y', Identifier('y'))
+                                ],
+                            ))
+                        ]
+                    )
+                ]
+            ))
+        ]), result)

@@ -99,5 +99,23 @@ class ReturnStmt(Stmt):
 
 
 @dataclass
+class StructDeclaration(Expr):
+    fields: List[Identifier]
+    methods: List[FunctionDeclStmt]
+
+
+@dataclass
+class StructInitializerPair:
+    field_name: str
+    value: Expr
+
+
+@dataclass
+class StructInstantiation(Expr):
+    name: Identifier
+    field_initializers: List[StructInitializerPair]
+
+
+@dataclass
 class Program:
     stmts: List[Stmt]

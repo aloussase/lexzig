@@ -68,7 +68,6 @@ class Lexer:
                             'IS_EQUAL_TO',
                             'GREATER_THAN',
                             'IS_NOT_EQUAL',
-                            'IS_NOT',
                             'MINUS',
                             'DIVISION',
                             'MULTIPLICATION',
@@ -117,7 +116,7 @@ class Lexer:
     t_ignore = ' \t'
 
     def t_BUILTIN_FUNCTION(self, t: LexToken) -> LexToken:
-        r'@[a-zA-Z_][a-zA-Z_0-9]*'
+        r"""@[a-zA-Z_][a-zA-Z_0-9]*"""
         t.value = t.value[1:]
         return t
 
