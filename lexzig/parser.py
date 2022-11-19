@@ -18,6 +18,7 @@ class Parser:
         ('nonassoc', 'LT', 'IS_EQUAL_TO', 'GREATER_THAN', 'IS_NOT_EQUAL'),
         ('left', 'PLUS', 'MINUS'),
         ('left', 'MULTIPLICATION', 'DIVISION', 'MODULE'),
+        ('left', 'DOT'),
     )
 
     def __init__(self):
@@ -200,14 +201,27 @@ class Parser:
 
     def p_expression(self, p) -> None:
         """
-        expression : arithmetic_expression
-                   | comparison_expression
-                   | if_expression
-                   | switch_expression
-                   | struct_decl
-                   | struct_instantiation
-                   | function_call
-                   | value_expression
+        expression : postfix_expression
+        """
+        p[0] = p[1]
+
+    def p_postfix_expression(self, p) -> None:
+        """
+        postfix_expression : field_access
+                           | function_call
+                           | primary_expression
+        """
+        p[0] = p[1]
+
+    def p_primary_expresssion(self, p) -> None:
+        """
+        primary_expression : arithmetic_expression
+                           | comparison_expression
+                           | if_expression
+                           | switch_expression
+                           | struct_decl
+                           | struct_instantiation
+                           | value_expression
         """
         p[0] = p[1]
 
@@ -217,6 +231,7 @@ class Parser:
                          | STRING
                          | IDENT
                          | CHAR
+                         | BUILTIN_FUNCTION
         """
         # TODO: It would be better to check the token type.
         # TODO: Test this.
@@ -277,26 +292,20 @@ class Parser:
 
     def p_function_call(self, p):
         """
-        function_call : function_name LPAREN function_args RPAREN
+        function_call : postfix_expression LPAREN function_args RPAREN
         """
-        p[0] = ast.FunctionCall(name=ast.Identifier(p[1]), args=p[3])
-
-    def p_function_name(self, p):
-        """
-        function_name : IDENT
-                      | BUILTIN_FUNCTION
-        """
-        p[0] = p[1]
+        p[0] = ast.FunctionCall(name=p[1], args=p[3])
 
     def p_function_args(self, p):
         """
-        function_args : expression COMMA function_args
-                      | expression
+        function_args : function_args expression COMMA
+                      | function_args expression
+                      | empty
         """
-        if len(p) == 2:
-            p[0] = [p[1]]
+        if 3 <= len(p) <= 4:
+            p[0] = p[1] + [p[2]]
         else:
-            p[0] = [p[1]] + p[3]
+            p[0] = []
 
     def p_switch_expression(self, p):
         """
@@ -370,6 +379,15 @@ class Parser:
         """
         p[0] = ast.Identifier(p[1])
 
+    def p_field_access(self, p):
+        """
+        field_access : postfix_expression DOT IDENT
+        """
+        p[0] = ast.FieldAccess(
+            target=p[1],
+            field_name=ast.Identifier(p[3])
+        )
+
     def p_struct_methods(self, p):
         """
         struct_methods : struct_methods functiondecl_stmt
@@ -399,9 +417,15 @@ class Parser:
 
     def p_struct_initializer_pair(self, p):
         """
-        struct_initializer_pair : DOT IDENT EQUAL expression
+        struct_initializer_pair : struct_initializer_field_name EQUAL expression
         """
-        p[0] = ast.StructInitializerPair(field_name=p[2], value=p[4])
+        p[0] = ast.StructInitializerPair(field_name=p[1], value=p[3])
+
+    def p_struct_initializer_field_name(self, p):
+        """
+        struct_initializer_field_name : DOT IDENT
+        """
+        p[0] = p[2]
 
     def p_empty(self, _) -> None:
         """empty :"""
@@ -412,7 +436,7 @@ class Parser:
         case.
         '''
         if not p:
-            print('Unexpected end of file while parsing')
+            print('Unexpected end of file while parsing, maybe you forgot a semicolon?')
             return
 
         while True:

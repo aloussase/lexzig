@@ -2,7 +2,8 @@ import unittest
 
 from lexzig.ast import (Program, FunctionDeclStmt, Identifier, AssignmentStmt,
                         Integer, IfExpr, BinOp, SwitchExpr, SwitchBranch, SwitchRange, SwitchList, FunctionCall,
-                        SwitchElse, ReturnStmt, StructDeclaration, StructInstantiation, StructInitializerPair
+                        SwitchElse, ReturnStmt, StructDeclaration, StructInstantiation, StructInitializerPair,
+                        String, FieldAccess
                         )
 from lexzig.parser import Parser
 
@@ -28,6 +29,30 @@ class TestParser(unittest.TestCase):
             params=[Identifier('x'), Identifier('y')],
             body=[ReturnStmt(value=BinOp(Identifier('x'), '/', Identifier('y')))]
         )]), result)
+
+    def test_parser_can_parse_variables_with_export_modifiers(self):
+        input = 'export var x = 42;'
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(Program(stmts=[
+            AssignmentStmt(ident=Identifier('x'), value=Integer(42))
+        ]), result)
+
+    def test_parser_can_parse_method_call(self):
+        input = 'std.debug.print("Hello");'
+        expected = Program(stmts=[
+            FunctionCall(
+                name=FieldAccess(
+                    target=FieldAccess(target=Identifier('std'), field_name=Identifier('debug')),
+                    field_name=Identifier("print")
+                ),
+                args=[String("\"Hello\"")]
+            )])
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(expected, result)
 
     def test_parser_can_parse_function_declarations(self):
         input = '''

@@ -2,10 +2,12 @@ from dataclasses import dataclass
 from typing import List
 
 
+@dataclass
 class Stmt:
     pass
 
 
+@dataclass
 class Expr(Stmt):
     pass
 
@@ -76,7 +78,7 @@ class SwitchExpr(Expr):
 
 @dataclass
 class FunctionCall(Expr):
-    name: Identifier
+    name: Expr
     args: List[Expr]
 
 
@@ -114,6 +116,12 @@ class StructInitializerPair:
 class StructInstantiation(Expr):
     name: Identifier
     field_initializers: List[StructInitializerPair]
+
+
+@dataclass
+class FieldAccess(Expr):
+    target: Expr
+    field_name: Identifier
 
 
 @dataclass
