@@ -20,7 +20,6 @@ class TestParser(unittest.TestCase):
             _ = character;
         }
         '''
-
         expected = Program(stmts=[
             ForStmt(
                 target=Identifier('string'),
@@ -33,6 +32,10 @@ class TestParser(unittest.TestCase):
                 ]
             )
         ])
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(expected, result)
 
     def test_parser_can_parse_for_loops_with_both_item_and_index_captures(self):
         input = '''
@@ -70,7 +73,8 @@ class TestParser(unittest.TestCase):
         self.assertEqual(Program(stmts=[FunctionDeclStmt(
             name=Identifier('div'),
             params=[Identifier('x'), Identifier('y')],
-            body=[ReturnStmt(value=BinOp(Identifier('x'), '/', Identifier('y')))]
+            body=[ReturnStmt(value=BinOp(
+                Identifier('x'), '/', Identifier('y')))]
         )]), result)
 
     def test_parser_can_parse_variables_with_export_modifiers(self):
@@ -87,7 +91,8 @@ class TestParser(unittest.TestCase):
         expected = Program(stmts=[
             FunctionCall(
                 name=FieldAccess(
-                    target=FieldAccess(target=Identifier('std'), field_name=Identifier('debug')),
+                    target=FieldAccess(target=Identifier(
+                        'std'), field_name=Identifier('debug')),
                     field_name=Identifier("print")
                 ),
                 args=[String("\"Hello\"")]
@@ -174,7 +179,8 @@ class TestParser(unittest.TestCase):
             AssignmentStmt(ident=Identifier('x'), value=SwitchExpr(
                 target=Integer(10),
                 branches=[
-                    SwitchBranch(match=SwitchRange(start=0, end=1), body=Integer(20)),
+                    SwitchBranch(match=SwitchRange(
+                        start=0, end=1), body=Integer(20)),
                     SwitchBranch(match=SwitchList(elems=[Integer(10), Integer(100)]),
                                  body=FunctionCall(name=Identifier('divExact'), args=[Integer(10), Integer(10)])),
                     SwitchBranch(match=SwitchElse(), body=Integer(10))
@@ -187,19 +193,41 @@ class TestParser(unittest.TestCase):
 
         result = self.parser.parse(input)
 
-        self.assertEqual(Program(stmts=[ReturnStmt(value=Integer(42))]), result)
+        self.assertEqual(
+            Program(stmts=[ReturnStmt(value=Integer(42))]), result)
+
+    def test_parser_can_parse_anonymous_struct_instantiation(self):
+        input = '''
+        const x: Person = .{
+            .name = "John",
+            .lastName = "Doe"
+        };
+        '''
+        expected = Program(stmts=[AssignmentStmt(
+            Identifier('x'),
+            StructInstantiation(
+                name=Identifier("anonymous"),
+                field_initializers=[
+                    StructInitializerPair('name', String('\"John\"')),
+                    StructInitializerPair('lastName', String('\"Doe\"'))
+                ]))
+        ])
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(expected, result)
 
     def test_parser_can_parse_structs(self):
         input = '''
         const Circle = struct {
             x: i32,
             y: i32,
-            
+
             pub fn new(x: i32, y: i32) Circle {
                 return Circle{
                     .x = x,
                     .y = y
-                }; 
+                };
             }
         };
         '''
@@ -217,7 +245,8 @@ class TestParser(unittest.TestCase):
                             ReturnStmt(value=StructInstantiation(
                                 name=Identifier('Circle'),
                                 field_initializers=[
-                                    StructInitializerPair('x', Identifier('x')),
+                                    StructInitializerPair(
+                                        'x', Identifier('x')),
                                     StructInitializerPair('y', Identifier('y'))
                                 ],
                             ))

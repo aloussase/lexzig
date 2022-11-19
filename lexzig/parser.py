@@ -405,8 +405,13 @@ class Parser:
     def p_struct_instantiation(self, p: YaccProduction) -> None:
         """
         struct_instantiation : IDENT LCURLY struct_initializer_pairs RCURLY
+                             | DOT LCURLY struct_initializer_pairs RCURLY
         """
-        p[0] = ast.StructInstantiation(name=ast.Identifier(p[1]), field_initializers=p[3])
+        p[0] = ast.StructInstantiation(
+            name=ast.Identifier(
+                p[1]) if p[1] != '.' else ast.Identifier('anonymous'),
+            field_initializers=p[3]
+        )
 
     def p_struct_initializer_pairs(self, p: YaccProduction) -> None:
         """
@@ -448,7 +453,7 @@ class Parser:
         """
         p[0] = ast.ForStmtCapture(
             item=p[2],
-            index=p[4]
+            index=p[4] if len(p) >= 5 else None
         )
 
     def p_for_stmt_capture_target(self, p: YaccProduction) -> None:

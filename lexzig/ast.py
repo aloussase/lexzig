@@ -12,7 +12,8 @@ class Expr(Stmt):
     pass
 
 
-class SwitchMatchTarget: pass
+class SwitchMatchTarget:
+    pass
 
 
 @dataclass
@@ -61,7 +62,8 @@ class SwitchList(SwitchMatchTarget):
 
 
 @dataclass
-class SwitchElse(SwitchMatchTarget): pass
+class SwitchElse(SwitchMatchTarget):
+    pass
 
 
 @dataclass
