@@ -1,0 +1,100 @@
+Prueba: ./examples/export.zig
+Fecha: Sat 19 Nov 2022 05:40:14 PM -05
+Resultado: Program(
+    stmts=[
+        FunctionDeclStmt(
+            name=Identifier(name='div'),
+            params=[Identifier(name='x'), Identifier(name='y')],
+            body=[ReturnStmt(value=BinOp(lhs=Identifier(name='x'), op='/', rhs=Identifier(name='y')))]
+        )
+    ]
+)
+
+Prueba: ./examples/input.zig
+Fecha: Sat 19 Nov 2022 05:40:14 PM -05
+Resultado: Program(stmts=[])
+
+Prueba: ./examples/output.zig
+Fecha: Sat 19 Nov 2022 05:40:14 PM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(ident=Identifier(name='std'), value=FunctionCall(name=Identifier(name='import'), args=[String(s='"std"')])),
+        FunctionDeclStmt(
+            name=Identifier(name='main'),
+            params=[],
+            body=[
+                FunctionCall(
+                    name=FieldAccess(
+                        target=FieldAccess(target=Identifier(name='std'), field_name=Identifier(name='debug')),
+                        field_name=Identifier(name='print')
+                    ),
+                    args=[String(s='"Hello, World!\\n"'), StructInstantiation(name=Identifier(name='anonymous'), field_initializers=[])]
+                )
+            ]
+        )
+    ]
+)
+
+Prueba: ./examples/struct.zig
+Fecha: Sat 19 Nov 2022 05:40:14 PM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(
+            ident=Identifier(name='Circle'),
+            value=StructDeclaration(
+                fields=[Identifier(name='x'), Identifier(name='y')],
+                methods=[
+                    FunctionDeclStmt(
+                        name=Identifier(name='new'),
+                        params=[Identifier(name='x'), Identifier(name='y')],
+                        body=[
+                            ReturnStmt(
+                                value=StructInstantiation(
+                                    name=Identifier(name='Circle'),
+                                    field_initializers=[
+                                        StructInitializerPair(field_name='x', value=Identifier(name='x')),
+                                        StructInitializerPair(field_name='y', value=Identifier(name='y'))
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                ]
+            )
+        ),
+        FunctionDeclStmt(name=Identifier(name='main'), params=[], body=[])
+    ]
+)
+
+Prueba: ./examples/switch.zig
+Fecha: Sat 19 Nov 2022 05:40:14 PM -05
+Resultado: Program(
+    stmts=[
+        FunctionDeclStmt(
+            name=Identifier(name='main'),
+            params=[],
+            body=[
+                AssignmentStmt(
+                    ident=Identifier(name='x'),
+                    value=SwitchExpr(
+                        target=Integer(n=10),
+                        branches=[
+                            SwitchBranch(match=SwitchRange(start=0, end=1), body=Integer(n=20)),
+                            SwitchBranch(
+                                match=SwitchList(elems=[Integer(n=10), Integer(n=100)]),
+                                body=FunctionCall(name=Identifier(name='divExact'), args=[Integer(n=10), Integer(n=10)])
+                            ),
+                            SwitchBranch(match=, body=Integer(n=10))
+                        ]
+                    )
+                ),
+                AssignmentStmt(ident=Identifier(name='_'), value=Identifier(name='x'))
+            ]
+        )
+    ]
+)
+
+Prueba: ./examples/token.zig
+Fecha: Sat 19 Nov 2022 05:40:14 PM -05
+Resultado: Program(stmts=[])
+
