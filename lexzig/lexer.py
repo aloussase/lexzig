@@ -86,7 +86,7 @@ class Lexer:
     t_DOT = r'\.'
     t_COLON = r':'
     t_COMMA = r','
-    t_CHAR = r"'[^']'"
+    t_CHAR = r"'([^']|\\n)'"
     t_FAT_ARROW = r'=>'
     t_ELLIPSIS = r'\.\.\.'
     t_EQUAL = r'='
