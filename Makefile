@@ -13,7 +13,7 @@ run:
 	$(PYTHON) $(CLI)
 
 typecheck:
-	$(MYPY) lexzig
+	$(MYPY) lexzig/ast.py lexzig/parser.py lexzig/lexer.py
 
 clean:
 	$(RM) **/*.out **/parsetab.py
