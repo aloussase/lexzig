@@ -49,6 +49,7 @@ class Parser:
              | functiondecl_stmt
              | expression_stmt
              | return_stmt
+             | for_stmt
         """
         p[0] = p[1]
 
@@ -429,6 +430,33 @@ class Parser:
         struct_initializer_field_name : DOT IDENT
         """
         p[0] = p[2]
+
+    def p_for_stmt(self, p: YaccProduction) -> None:
+        """
+        for_stmt : FOR LPAREN expression RPAREN for_stmt_capture LCURLY stmts RCURLY
+        """
+        p[0] = ast.ForStmt(
+            target=p[3],
+            capture=p[5],
+            body=p[7]
+        )
+
+    def p_for_stmt_capture(self, p: YaccProduction) -> None:
+        """
+        for_stmt_capture : BAR for_stmt_capture_target COMMA for_stmt_capture_target BAR
+                         | BAR for_stmt_capture_target BAR
+        """
+        p[0] = ast.ForStmtCapture(
+            item=p[2],
+            index=p[4]
+        )
+
+    def p_for_stmt_capture_target(self, p: YaccProduction) -> None:
+        """
+        for_stmt_capture_target : IDENT
+                                | UNDERSCORE
+        """
+        p[0] = ast.Identifier(p[1])
 
     def p_empty(self, _: YaccProduction) -> None:
         """empty :"""

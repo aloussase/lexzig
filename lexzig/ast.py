@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
@@ -122,6 +122,19 @@ class StructInstantiation(Expr):
 class FieldAccess(Expr):
     target: Expr
     field_name: Identifier
+
+
+@dataclass
+class ForStmtCapture:
+    item: Identifier
+    index: Optional[Identifier]
+
+
+@dataclass
+class ForStmt(Stmt):
+    target: Identifier
+    capture: ForStmtCapture
+    body: List[Stmt]
 
 
 @dataclass

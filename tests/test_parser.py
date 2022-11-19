@@ -3,7 +3,7 @@ import unittest
 from lexzig.ast import (Program, FunctionDeclStmt, Identifier, AssignmentStmt,
                         Integer, IfExpr, BinOp, SwitchExpr, SwitchBranch, SwitchRange, SwitchList, FunctionCall,
                         SwitchElse, ReturnStmt, StructDeclaration, StructInstantiation, StructInitializerPair,
-                        String, FieldAccess
+                        String, FieldAccess, ForStmt, ForStmtCapture
                         )
 from lexzig.parser import Parser
 
@@ -13,7 +13,50 @@ class TestParser(unittest.TestCase):
 
     # TODO: Test arithmetic expressions
     # TODO: Test comparison operators
-    # TODO: Test export modifier in functions and variable declarations
+
+    def test_parser_can_parse_for_loops_with_only_item_capture(self):
+        input = '''
+        for (string) |character| {
+            _ = character;
+        }
+        '''
+
+        expected = Program(stmts=[
+            ForStmt(
+                target=Identifier('string'),
+                capture=ForStmtCapture(
+                    item=Identifier('character'),
+                    index=None
+                ),
+                body=[
+                    AssignmentStmt(Identifier('_'), Identifier('character'))
+                ]
+            )
+        ])
+
+    def test_parser_can_parse_for_loops_with_both_item_and_index_captures(self):
+        input = '''
+        for (string) |character, index| {
+            _ = character;
+            _ = index;
+        }
+        '''
+        expected = Program(stmts=[ForStmt(
+            target=Identifier('string'),
+            capture=ForStmtCapture(
+                item=Identifier('character'),
+                index=Identifier('index'),
+            ),
+            body=[
+                AssignmentStmt(Identifier('_'), Identifier('character')),
+                AssignmentStmt(Identifier('_'), Identifier('index'))
+            ]
+        )
+        ])
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(expected, result)
 
     def test_parser_can_parse_functions_with_export_modifiers(self):
         input = '''
