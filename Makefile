@@ -16,4 +16,4 @@ typecheck:
 	$(MYPY) lexzig/ast.py lexzig/parser.py lexzig/lexer.py
 
 clean:
-	$(RM) **/*.out **/parsetab.py
+	$(RM) **/*.out **/parsetab.py log.txt
