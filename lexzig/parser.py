@@ -146,7 +146,6 @@ class Parser:
         compound_typedecl : LBRACE RBRACE typedecl
                           | LBRACE INTEGER RBRACE typedecl
                           | typedecl
-                          | IDENT
         """
 
     def p_error_union_typedecl(self, p: YaccProduction) -> None:
@@ -195,6 +194,7 @@ class Parser:
                  | TYPE_COMPTIME_FLOAT
                  | TYPE_NULL
                  | TYPE_UNDEFINED
+                 | IDENT
         """
 
     def p_expression_stmt(self, p: YaccProduction) -> None:
@@ -237,6 +237,7 @@ class Parser:
                          | IDENT
                          | CHAR
                          | BUILTIN_FUNCTION
+                         | TYPE_UNDEFINED
         """
         # TODO: It would be better to check the token type.
         # TODO: Test this.
