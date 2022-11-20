@@ -473,6 +473,25 @@ class Parser:
         """
         p[0] = ast.Identifier(p[1])
 
+    def p_while_stmt(self, p: YaccProduction) -> None:
+        """
+        while_stmt : WHILE LPAREN expression RPAREN LCURLY stmts RCURLY
+                | WHILE LPAREN expression RPAREN while_stmt_capture LCURLY stmts RCURLY
+                | WHILE LPAREN expression RPAREN COLON LPAREN expression RPAREN LCURLY stmts RCURLY
+        """
+
+    def p_while_stmt_capture(self, p: YaccProduction) -> None:
+        """
+        while_stmt_capture : BAR while_stmt_capture_target COMMA while_stmt_capture_target BAR
+                         | BAR while_stmt_capture_target BAR
+        """
+
+    def p_while_stmt_capture_target(self, p: YaccProduction) -> None:
+        """
+        while_stmt_capture_target : IDENT
+                                | UNDERSCORE
+        """
+
     def p_try_expression(self, p: YaccProduction) -> None:
         """
         try_expression : TRY expression
