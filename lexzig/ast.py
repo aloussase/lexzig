@@ -140,5 +140,10 @@ class ForStmt(Stmt):
 
 
 @dataclass
+class TryExpr(Expr):
+    value: Expr
+
+
+@dataclass
 class Program:
     stmts: List[Stmt]

@@ -225,6 +225,7 @@ class Parser:
                            | switch_expression
                            | struct_decl
                            | struct_instantiation
+                           | try_expression
                            | value_expression
         """
         p[0] = p[1]
@@ -462,6 +463,12 @@ class Parser:
                                 | UNDERSCORE
         """
         p[0] = ast.Identifier(p[1])
+
+    def p_try_expression(self, p: YaccProduction) -> None:
+        """
+        try_expression : TRY expression
+        """
+        p[0] = ast.TryExpr(p[2])
 
     def p_empty(self, _: YaccProduction) -> None:
         """empty :"""
