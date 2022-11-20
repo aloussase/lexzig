@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/fontawesome.min.css"
+      integrity="sha512-RvQxwf+3zJuNwl4e0sZjQeX7kUa3o82bDETpgVCH2RiwYSZVDdFJ7N/woNigN/ldyOOoKw8584jM4plQdt8bhA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/solid.min.css"
+      integrity="sha512-uj2QCZdpo8PSbRGL/g5mXek6HM/APd7k/B5Hx/rkVFPNOxAQMXD+t+bG4Zv8OAdUpydZTU3UHmyjjiHv2Ww0PA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/brands.min.css"
+      integrity="sha512-+oRH6u1nDGSm3hH8poU85YFIVTdSnS2f+texdPGrURaJh8hzmhMiZrQth6l56P4ZQmxeZzd2DqVEMqQoJ8J89A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>LexZig Editor</title>
+  </head>
+  <body>
+    <header>
+      <app-navbar></app-navbar>
+    </header>
+    <main class="min-vh-100">
+      <div class="row p-sm-4">
+        <app-code-editor
+          class="col-sm"
+          (analysedCode)="onAnalysedCode($event)"
+          (analysisError)="onAnalysisError($event)"
+        ></app-code-editor>
+        <div class="col-md col-md-3 d-none d-md-block">
+          <img src="/assets/zero.svg" class="img-fluid" />
+        </div>
+      </div>
+      <div
+        id="analysis-failure"
+        *ngIf="analysisError !== null"
+        class="row p-sm-4"
+      >
+        <div
+          class="alert alert-danger alert-dismissible fade show col col-4"
+          role="alert"
+        >
+          {{ analysisError }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+      <div class="row p-sm-4">
+        <app-analysis-results
+          class="col"
+          [analysisResults]="analysisResults"
+        ></app-analysis-results>
+      </div>
+    </main>
+    <footer class="bg-primary text-white py-3">
+      <div class="row">
+        <div class="col text-center">
+          <span>
+            Fork me on
+            <a
+              href="https://github.com/aloussase/lexzig-ui.git"
+              target="_blank"
+              class="link-dark"
+            >
+              <i class="fa-brands fa-github"></i>
+            </a>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <span> Copyright &copy; 2022 Alexander Goussas </span>
+        </div>
+      </div>
+    </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
