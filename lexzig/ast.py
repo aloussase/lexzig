@@ -44,6 +44,12 @@ class BinOp(Expr):
 
 
 @dataclass
+class UnaryOp(Expr):
+    op: str
+    rhs: Expr
+
+
+@dataclass
 class IfExpr(Expr):
     condition: Expr
     ifBranch: Expr

@@ -21,6 +21,7 @@ class Parser:
         ('nonassoc', 'LT', 'IS_EQUAL_TO', 'GREATER_THAN', 'IS_NOT_EQUAL'),
         ('left', 'PLUS', 'MINUS'),
         ('left', 'MULTIPLICATION', 'DIVISION', 'MODULE'),
+        ('right', 'AMPERSAND'),
         ('left', 'DOT'),
     )
 
@@ -226,9 +227,16 @@ class Parser:
                            | struct_decl
                            | struct_instantiation
                            | try_expression
+                           | unary_expression
                            | value_expression
         """
         p[0] = p[1]
+
+    def p_unary_expression(self, p: YaccProduction) -> None:
+        """
+        unary_expression : AMPERSAND expression
+        """
+        p[0] = ast.UnaryOp(op=p[1], rhs=p[2])
 
     def p_value_expression(self, p: YaccProduction) -> None:
         """

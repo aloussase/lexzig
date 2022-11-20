@@ -3,7 +3,8 @@ import unittest
 from lexzig.ast import (Program, FunctionDeclStmt, Identifier, AssignmentStmt,
                         Integer, IfExpr, BinOp, SwitchExpr, SwitchBranch, SwitchRange, SwitchList, FunctionCall,
                         SwitchElse, ReturnStmt, StructDeclaration, StructInstantiation, StructInitializerPair,
-                        String, FieldAccess, ForStmt, ForStmtCapture, TryExpr
+                        String, FieldAccess, ForStmt, ForStmtCapture, TryExpr,
+                        UnaryOp
                         )
 from lexzig.parser import Parser
 
@@ -13,6 +14,16 @@ class TestParser(unittest.TestCase):
 
     # TODO: Test arithmetic expressions
     # TODO: Test comparison operators
+
+    def test_parser_can_parse_ampersand(self):
+        input = '&someVariable;'
+        expected = Program(stmts=[
+            UnaryOp(op='&', rhs=Identifier('someVariable'))
+        ])
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(expected, result)
 
     def test_parser_can_parse_try_expressions(self):
         input = '''const x = try someFunc();'''
