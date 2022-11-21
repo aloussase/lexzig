@@ -1,5 +1,6 @@
 from typing import cast
 
+from ply.lex import LexToken
 import ply.yacc as yacc  # type: ignore
 from ply.yacc import YaccProduction
 
@@ -278,11 +279,11 @@ class Parser:
 
     def p_arithmetic_expression(self, p: YaccProduction) -> None:
         """
-        arithmetic_expression : arithmetic_expression_operand PLUS           arithmetic_expression_operand
-                              | arithmetic_expression_operand MINUS          arithmetic_expression_operand
-                              | arithmetic_expression_operand MULTIPLICATION arithmetic_expression_operand
-                              | arithmetic_expression_operand DIVISION       arithmetic_expression_operand
-                              | arithmetic_expression_operand MODULE         arithmetic_expression_operand
+        arithmetic_expression : expression PLUS expression
+                              | expression MINUS expression
+                              | expression MULTIPLICATION expression
+                              | expression DIVISION expression
+                              | expression MODULE expression
         """
         lhs, op, rhs = p[1:4]
 
@@ -294,16 +295,6 @@ class Parser:
             p[0] = ast.BinOp(lhs=lhs, op='*', rhs=rhs)
         elif op == '/':
             p[0] = ast.BinOp(lhs=lhs, op='/', rhs=rhs)
-
-    def p_arithmetic_expression_operand(self, p: YaccProduction) -> None:
-        """
-        arithmetic_expression_operand : INTEGER
-                                      | IDENT
-        """
-        if isinstance(p[1], int):
-            p[0] = ast.Integer(p[1])
-        else:
-            p[0] = ast.Identifier(p[1])
 
     # TODO: Find another way to parse these, lots of S/R conflicts.
     def p_comparison_expression(self, p: YaccProduction) -> None:
@@ -520,14 +511,16 @@ class Parser:
     def p_empty(self, _: YaccProduction) -> None:
         """empty :"""
 
-    def p_error(self, p: YaccProduction) -> None:
+    def p_error(self, token: LexToken) -> None:
         '''
         Skip tokens until we meet a synchronization point, a semicolon in this
         case.
         '''
-        if not p:
+        if not token:
             print('Unexpected end of file while parsing, maybe you forgot a semicolon?')
             return
+
+        print(f'Error while parsing at token: {token.type}')
 
         while True:
             token = self.parser.token()

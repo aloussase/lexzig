@@ -1,4 +1,254 @@
 Prueba: ./examples/while_basic.zig
+Fecha: Mon 21 Nov 2022 10:37:44 AM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(ident=Identifier(name='std'), value=FunctionCall(name=Identifier(name='import'), args=[String(s='"std"')])),
+        FunctionDeclStmt(
+            name=Identifier(name='main'),
+            params=[],
+            body=[
+                AssignmentStmt(ident=Identifier(name='x'), value=Integer(n=1)),
+                WhileStmt(
+                    condition=BinOp(lhs=Identifier(name='x'), op='<', rhs=Integer(n=10)),
+                    body=[
+                        FunctionCall(
+                            name=FieldAccess(
+                                target=FieldAccess(target=Identifier(name='std'), field_name=Identifier(name='debug')),
+                                field_name=Identifier(name='print')
+                            ),
+                            args=[String(s='"x = {}"'), StructInstantiation(name=Identifier(name='anonymous'), field_initializers=[])]
+                        )
+                    ],
+                    post_action=AssignmentExpr(ident=Identifier(name='x'), op='+=', value=Integer(n=1)),
+                    capture=None
+                )
+            ]
+        )
+    ]
+)
+
+Prueba: ./examples/while.zig
+Fecha: Mon 21 Nov 2022 10:37:44 AM -05
+Resultado: Error while parsing at token: IDENT
+Error while parsing at token: RCURLY
+Error while parsing at token: IDENT
+Program(stmts=[])
+
+Prueba: ./examples/token.zig
+Fecha: Mon 21 Nov 2022 10:37:44 AM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(
+            ident=Identifier(name='TokenType'),
+            value=EnumDeclaration(
+                variants=[
+                    Identifier(name='ILLEGAL'),
+                    Identifier(name='EOF'),
+                    Identifier(name='IDENT'),
+                    Identifier(name='INT'),
+                    Identifier(name='ASSIGN'),
+                    Identifier(name='PLUS'),
+                    Identifier(name='MINUS'),
+                    Identifier(name='BANG'),
+                    Identifier(name='ASTERISK'),
+                    Identifier(name='SLASH'),
+                    Identifier(name='EQ'),
+                    Identifier(name='NOT_EQ'),
+                    Identifier(name='LT'),
+                    Identifier(name='GT'),
+                    Identifier(name='COMMA'),
+                    Identifier(name='SEMICOLON'),
+                    Identifier(name='LPAREN'),
+                    Identifier(name='RPAREN'),
+                    Identifier(name='LBRACE'),
+                    Identifier(name='RBRACE'),
+                    Identifier(name='FUNCTION'),
+                    Identifier(name='LET'),
+                    Identifier(name='IF'),
+                    Identifier(name='FALSE'),
+                    Identifier(name='TRUE'),
+                    Identifier(name='ELSE'),
+                    Identifier(name='RETURN')
+                ],
+                methods=[]
+            )
+        )
+    ]
+)
+
+Prueba: ./examples/switch.zig
+Fecha: Mon 21 Nov 2022 10:37:44 AM -05
+Resultado: Program(
+    stmts=[
+        FunctionDeclStmt(
+            name=Identifier(name='main'),
+            params=[],
+            body=[
+                AssignmentStmt(
+                    ident=Identifier(name='x'),
+                    value=SwitchExpr(
+                        target=Integer(n=10),
+                        branches=[
+                            SwitchBranch(match=SwitchRange(start=0, end=1), body=Integer(n=20)),
+                            SwitchBranch(
+                                match=SwitchList(elems=[Integer(n=10), Integer(n=100)]),
+                                body=FunctionCall(name=Identifier(name='divExact'), args=[Integer(n=10), Integer(n=10)])
+                            ),
+                            SwitchBranch(match=, body=Integer(n=10))
+                        ]
+                    )
+                ),
+                AssignmentStmt(ident=Identifier(name='_'), value=Identifier(name='x'))
+            ]
+        )
+    ]
+)
+
+Prueba: ./examples/struct.zig
+Fecha: Mon 21 Nov 2022 10:37:44 AM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(
+            ident=Identifier(name='Circle'),
+            value=StructDeclaration(
+                fields=[Identifier(name='x'), Identifier(name='y')],
+                methods=[
+                    FunctionDeclStmt(
+                        name=Identifier(name='new'),
+                        params=[Identifier(name='x'), Identifier(name='y')],
+                        body=[
+                            ReturnStmt(
+                                value=StructInstantiation(
+                                    name=Identifier(name='Circle'),
+                                    field_initializers=[
+                                        StructInitializerPair(field_name='x', value=Identifier(name='x')),
+                                        StructInitializerPair(field_name='y', value=Identifier(name='y'))
+                                    ]
+                                )
+                            )
+                        ]
+                    )
+                ]
+            )
+        ),
+        FunctionDeclStmt(name=Identifier(name='main'), params=[], body=[])
+    ]
+)
+
+Prueba: ./examples/output.zig
+Fecha: Mon 21 Nov 2022 10:37:44 AM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(ident=Identifier(name='std'), value=FunctionCall(name=Identifier(name='import'), args=[String(s='"std"')])),
+        FunctionDeclStmt(
+            name=Identifier(name='main'),
+            params=[],
+            body=[
+                FunctionCall(
+                    name=FieldAccess(
+                        target=FieldAccess(target=Identifier(name='std'), field_name=Identifier(name='debug')),
+                        field_name=Identifier(name='print')
+                    ),
+                    args=[String(s='"Hello, World!\n"'), StructInstantiation(name=Identifier(name='anonymous'), field_initializers=[])]
+                )
+            ]
+        )
+    ]
+)
+
+Prueba: ./examples/input.zig
+Fecha: Mon 21 Nov 2022 10:37:44 AM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(ident=Identifier(name='std'), value=FunctionCall(name=Identifier(name='import'), args=[String(s='"std"')])),
+        FunctionDeclStmt(
+            name=Identifier(name='main'),
+            params=[],
+            body=[
+                AssignmentStmt(
+                    ident=Identifier(name='stdin'),
+                    value=FunctionCall(
+                        name=FieldAccess(
+                            target=FunctionCall(
+                                name=FieldAccess(
+                                    target=FieldAccess(target=Identifier(name='std'), field_name=Identifier(name='io')),
+                                    field_name=Identifier(name='getStdIn')
+                                ),
+                                args=[]
+                            ),
+                            field_name=Identifier(name='reader')
+                        ),
+                        args=[]
+                    )
+                ),
+                AssignmentStmt(ident=Identifier(name='buf'), value=Identifier(name='undefined')),
+                AssignmentStmt(
+                    ident=Identifier(name='line'),
+                    value=TryExpr(
+                        value=FunctionCall(
+                            name=FieldAccess(target=Identifier(name='stdin'), field_name=Identifier(name='readUntilDelimiter')),
+                            args=[UnaryOp(op='&', rhs=Identifier(name='buf')), Char(c="'\n'")]
+                        )
+                    )
+                ),
+                AssignmentStmt(ident=Identifier(name='_'), value=Identifier(name='line'))
+            ]
+        )
+    ]
+)
+
+Prueba: ./examples/factorial.zig
+Fecha: Mon 21 Nov 2022 10:37:44 AM -05
+Resultado: Program(
+    stmts=[
+        FunctionDeclStmt(
+            name=Identifier(name='factorial'),
+            params=[Identifier(name='n')],
+            body=[
+                ReturnStmt(
+                    value=IfExpr(
+                        condition=BinOp(lhs=Identifier(name='n'), op='==', rhs=Integer(n=0)),
+                        ifBranch=Integer(n=1),
+                        elseBranch=BinOp(
+                            lhs=Identifier(name='n'),
+                            op='*',
+                            rhs=FunctionCall(name=Identifier(name='factorial'), args=[BinOp(lhs=Identifier(name='n'), op='-', rhs=Integer(n=1))])
+                        )
+                    )
+                )
+            ]
+        ),
+        FunctionDeclStmt(
+            name=Identifier(name='main'),
+            params=[],
+            body=[
+                AssignmentStmt(ident=Identifier(name='std'), value=FunctionCall(name=Identifier(name='import'), args=[String(s='"std"')])),
+                AssignmentStmt(ident=Identifier(name='result'), value=FunctionCall(name=Identifier(name='factorial'), args=[Integer(n=10)])),
+                FunctionCall(
+                    name=FieldAccess(
+                        target=FieldAccess(target=Identifier(name='std'), field_name=Identifier(name='debug')),
+                        field_name=Identifier(name='print')
+                    ),
+                    args=[String(s='"fact = {}"'), StructInstantiation(name=Identifier(name='anonymous'), field_initializers=[])]
+                )
+            ]
+        )
+    ]
+)
+
+Prueba: ./examples/export.zig
+Fecha: Mon 21 Nov 2022 10:37:43 AM -05
+Resultado: Program(
+    stmts=[
+        FunctionDeclStmt(
+            name=Identifier(name='div'),
+            params=[Identifier(name='x'), Identifier(name='y')],
+            body=[ReturnStmt(value=BinOp(lhs=Identifier(name='x'), op='/', rhs=Identifier(name='y')))]
+        )
+    ]
+)
+
+Prueba: ./examples/while_basic.zig
 Fecha: Mon 21 Nov 2022 10:14:03 AM -05
 Resultado: Program(
     stmts=[
@@ -146,7 +396,8 @@ Resultado: Program(
                         target=FieldAccess(target=Identifier(name='std'), field_name=Identifier(name='debug')),
                         field_name=Identifier(name='print')
                     ),
-                    args=[String(s='"Hello, World!\n"'), StructInstantiation(name=Identifier(name='anonymous'), field_initializers=[])]
+                    args=[String(s='"Hello, World!
+"'), StructInstantiation(name=Identifier(name='anonymous'), field_initializers=[])]
                 )
             ]
         )
@@ -184,7 +435,8 @@ Resultado: Program(
                     value=TryExpr(
                         value=FunctionCall(
                             name=FieldAccess(target=Identifier(name='stdin'), field_name=Identifier(name='readUntilDelimiter')),
-                            args=[UnaryOp(op='&', rhs=Identifier(name='buf')), Char(c="'\n'")]
+                            args=[UnaryOp(op='&', rhs=Identifier(name='buf')), Char(c="'
+'")]
                         )
                     )
                 ),
