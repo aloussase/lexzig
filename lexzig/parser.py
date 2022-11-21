@@ -515,6 +515,22 @@ class Parser:
                 break
 
         self.parser.restart()
-
+    
+    def p_enum_decl(self, p:YaccProduction) -> None:
+        """
+        enum_decl : ENUM LCURLY enum_fields enum_methods RCURLY
+        """
+    def p_enum_fields(self, p: YaccProduction) -> None:
+        """
+        enum_fields : enum_fields IDENT COMMA
+                      | empty
+        """
+	
+    def p_enum_methods(self, p: YaccProduction) -> None:
+        """
+        enum_methods : enum_methods functiondecl_stmt
+                       | empty
+        """
+    
     def parse(self, input: str) -> ast.Program:
         return cast(ast.Program, self.parser.parse(input, lexer=Lexer().lexer))
