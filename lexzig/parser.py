@@ -482,8 +482,7 @@ class Parser:
 
     def p_while_stmt_capture(self, p: YaccProduction) -> None:
         """
-        while_stmt_capture : BAR while_stmt_capture_target COMMA while_stmt_capture_target BAR
-                         | BAR while_stmt_capture_target BAR
+        while_stmt_capture : BAR while_stmt_capture_target BAR
         """
 
     def p_while_stmt_capture_target(self, p: YaccProduction) -> None:
