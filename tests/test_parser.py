@@ -1,10 +1,12 @@
 import unittest
 
 from lexzig.ast import (Program, FunctionDeclStmt, Identifier, AssignmentStmt,
-                        Integer, IfExpr, BinOp, SwitchExpr, SwitchBranch, SwitchRange, SwitchList, FunctionCall,
-                        SwitchElse, ReturnStmt, StructDeclaration, StructInstantiation, StructInitializerPair,
+                        Integer, IfExpr, BinOp, SwitchExpr, SwitchBranch,
+                        SwitchRange, SwitchList, FunctionCall,
+                        SwitchElse, ReturnStmt, StructDeclaration,
+                        StructInstantiation, StructInitializerPair,
                         String, FieldAccess, ForStmt, ForStmtCapture, TryExpr,
-                        UnaryOp
+                        UnaryOp, WhileStmt, AssignmentExpr, EnumDeclaration
                         )
 from lexzig.parser import Parser
 
@@ -14,6 +16,60 @@ class TestParser(unittest.TestCase):
 
     # TODO: Test arithmetic expressions
     # TODO: Test comparison operators
+
+    def test_parser_can_parse_enums(self):
+        input = '''
+        const RGB = enum {
+            Red,
+            Green,
+            Blue,
+        };
+        '''
+        expected = Program(stmts=[AssignmentStmt(Identifier('RGB'), EnumDeclaration(
+            variants=[
+                Identifier('Red'),
+                Identifier('Green'),
+                Identifier('Blue')
+            ],
+            methods=[],
+        ))])
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(expected, result)
+
+    def test_parser_can_parse_while_loops(self):
+        input = '''
+        var x = 1;
+        while (x < 10) : (x += 1) {
+            std.debug.print("x = {}", .{});
+        }
+        '''
+        expected = Program(stmts=[
+            AssignmentStmt(Identifier('x'), Integer(1)),
+            WhileStmt(
+                condition=BinOp(Identifier('x'), '<', Integer(10)),
+                post_action=AssignmentExpr(
+                    ident=Identifier('x'),
+                    op='+=',
+                    value=Integer(1)
+                ),
+                body=[FunctionCall(
+                    FieldAccess(
+                        FieldAccess(Identifier("std"), Identifier("debug")),
+                        Identifier("print")
+                    ),
+                    args=[
+                        String("\"x = {}\""),
+                        # TODO: Implement anonymous arrays
+                        StructInstantiation(Identifier("anonymous"), [])
+                    ]
+                )])
+        ])
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(expected, result)
 
     def test_parser_can_parse_ampersand(self):
         input = '&someVariable;'

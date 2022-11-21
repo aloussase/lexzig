@@ -109,6 +109,12 @@ class ReturnStmt(Stmt):
 
 
 @dataclass
+class EnumDeclaration(Expr):
+    variants: List[Identifier]
+    methods: List[FunctionDeclStmt]
+
+
+@dataclass
 class StructDeclaration(Expr):
     fields: List[Identifier]
     methods: List[FunctionDeclStmt]
@@ -147,6 +153,21 @@ class ForStmt(Stmt):
 
 @dataclass
 class TryExpr(Expr):
+    value: Expr
+
+
+@dataclass
+class WhileStmt:
+    condition: Expr
+    body: List[Stmt]
+    post_action: Optional[Expr] = None
+    capture: Optional[Identifier] = None
+
+
+@dataclass
+class AssignmentExpr:
+    ident: Identifier
+    op: str
     value: Expr
 
 

@@ -18,6 +18,8 @@ class Parser:
         # Make else bind weaker than other operators to avoid conflicts
         # with if expressions.
         ('left', 'ELSE'),
+        ('nonassoc', 'MINUS_EQUAL', 'MOD_EQUAL',
+         'MULT_EQUAL', 'PLUS_EQUAL', 'DIV_EQUAL', 'EQUAL'),
         ('nonassoc', 'LT', 'IS_EQUAL_TO', 'GREATER_THAN', 'IS_NOT_EQUAL'),
         ('left', 'PLUS', 'MINUS'),
         ('left', 'MULTIPLICATION', 'DIVISION', 'MODULE'),
@@ -51,6 +53,7 @@ class Parser:
              | expression_stmt
              | return_stmt
              | for_stmt
+             | while_stmt
         """
         p[0] = p[1]
 
@@ -60,27 +63,39 @@ class Parser:
         """
         p[0] = ast.ReturnStmt(p[2])
 
+    def p_assignment_expression(self, p: YaccProduction) -> None:
+        """
+        assignment_expression : IDENT assignment_stmt_tail
+        """
+        op, value = p[2]
+        p[0] = ast.AssignmentExpr(
+            ident=ast.Identifier(p[1]),
+            op=op,
+            value=value
+        )
+
     def p_assignment_stmt(self, p: YaccProduction) -> None:
         """
-        assignment_stmt : vardecl IDENT assignment_stmt_tail
-                        | vardecl IDENT COLON error_union_typedecl assignment_stmt_tail
-                        | UNDERSCORE assignment_stmt_tail
+        assignment_stmt : vardecl IDENT assignment_stmt_tail SEMICOLON
+                        | vardecl IDENT COLON error_union_typedecl assignment_stmt_tail SEMICOLON
+                        | UNDERSCORE assignment_stmt_tail SEMICOLON
         """
+        _, value = p[len(p) - 2]
         p[0] = ast.AssignmentStmt(
-            ident=ast.Identifier(p[2] if len(p) > 3 else p[1]),
-            value=p[len(p) - 1]
+            ident=ast.Identifier(p[2] if len(p) > 4 else p[1]),
+            value=value
         )
 
     def p_assignment_stmt_tail(self, p: YaccProduction) -> None:
         """
-        assignment_stmt_tail : EQUAL expression SEMICOLON
-                             | MINUS_EQUAL expression SEMICOLON
-                             | MOD_EQUAL expression SEMICOLON
-                             | MULT_EQUAL expression SEMICOLON
-                             | PLUS_EQUAL expression SEMICOLON
-                             | DIV_EQUAL expression SEMICOLON
+        assignment_stmt_tail : EQUAL expression
+                             | MINUS_EQUAL expression
+                             | MOD_EQUAL expression
+                             | MULT_EQUAL expression
+                             | PLUS_EQUAL expression
+                             | DIV_EQUAL expression
         """
-        p[0] = p[2]
+        p[0] = (p[1], p[2])
 
     def p_functiondecl_stmt(self, p: YaccProduction) -> None:
         """
@@ -225,9 +240,11 @@ class Parser:
                            | if_expression
                            | switch_expression
                            | struct_decl
+                           | enum_decl
                            | struct_instantiation
                            | try_expression
                            | unary_expression
+                           | assignment_expression
                            | value_expression
         """
         p[0] = p[1]
@@ -476,20 +493,23 @@ class Parser:
     def p_while_stmt(self, p: YaccProduction) -> None:
         """
         while_stmt : WHILE LPAREN expression RPAREN LCURLY stmts RCURLY
-                | WHILE LPAREN expression RPAREN while_stmt_capture LCURLY stmts RCURLY
-                | WHILE LPAREN expression RPAREN COLON LPAREN expression RPAREN LCURLY stmts RCURLY
+                   | WHILE LPAREN expression RPAREN BAR while_stmt_capture_target BAR LCURLY stmts RCURLY
+                   | WHILE LPAREN expression RPAREN COLON LPAREN expression RPAREN LCURLY stmts RCURLY
         """
-
-    def p_while_stmt_capture(self, p: YaccProduction) -> None:
-        """
-        while_stmt_capture : BAR while_stmt_capture_target BAR
-        """
+        condition = p[3]
+        if len(p) == 8:
+            p[0] = ast.WhileStmt(condition, body=p[6])
+        elif len(p) == 9:
+            p[0] = ast.WhileStmt(condition, capture=p[6], body=p[9])
+        else:
+            p[0] = ast.WhileStmt(condition, post_action=p[7], body=p[10])
 
     def p_while_stmt_capture_target(self, p: YaccProduction) -> None:
         """
         while_stmt_capture_target : IDENT
-                                | UNDERSCORE
+                                  | UNDERSCORE
         """
+        p[0] = ast.Identifier(p[1])
 
     def p_try_expression(self, p: YaccProduction) -> None:
         """
@@ -515,22 +535,32 @@ class Parser:
                 break
 
         self.parser.restart()
-    
-    def p_enum_decl(self, p:YaccProduction) -> None:
+
+    def p_enum_decl(self, p: YaccProduction) -> None:
         """
-        enum_decl : ENUM LCURLY enum_fields enum_methods RCURLY
+        enum_decl : ENUM LCURLY enum_variants enum_methods RCURLY
         """
+        p[0] = ast.EnumDeclaration(
+            variants=p[3],
+            methods=p[4]
+        )
+
     def p_enum_fields(self, p: YaccProduction) -> None:
         """
-        enum_fields : enum_fields IDENT COMMA
-                      | empty
+        enum_variants : enum_variants IDENT COMMA
+                      | IDENT COMMA
         """
-	
+        if len(p) == 3:
+            p[0] = [ast.Identifier(p[1])]
+        else:
+            p[0] = p[1] + [ast.Identifier(p[2])]
+
     def p_enum_methods(self, p: YaccProduction) -> None:
         """
         enum_methods : enum_methods functiondecl_stmt
-                       | empty
+                     | empty
         """
-    
+        p[0] = [] if len(p) == 2 else p[1] + [p[2]]
+
     def parse(self, input: str) -> ast.Program:
         return cast(ast.Program, self.parser.parse(input, lexer=Lexer().lexer))
