@@ -500,7 +500,7 @@ class Parser:
     
     def p_enum_decl(self, p:YaccProduction) -> None:
         """
-        enum_decl : vardecl_tail IDENT EQUAL ENUM LCURLY enum_fields enum_methods RCURLY
+        enum_decl : ENUM LCURLY enum_fields enum_methods RCURLY
         """
     def p_enum_fields(self, p: YaccProduction) -> None:
         """
