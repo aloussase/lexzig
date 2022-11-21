@@ -498,26 +498,16 @@ class Parser:
 
         self.parser.restart()
     
-    def p_enum(self, p:YaccProduction) -> None:
-        """
-        enum : vardecl_tail IDENT p_enum_decl
-        """
-
     def p_enum_decl(self, p:YaccProduction) -> None:
         """
-        enum_decl : ENUM LCURLY enum_fields enum_methods RCURLY
+        enum_decl : vardecl_tail IDENT EQUAL ENUM LCURLY enum_fields enum_methods RCURLY
         """
     def p_enum_fields(self, p: YaccProduction) -> None:
         """
-        enum_fields : enum_fields enum_field COMMA
+        enum_fields : enum_fields IDENT COMMA
                       | empty
         """
 	
-    def p_enum_field(self, p: YaccProduction) -> None:
-        """
-        enum_field : IDENT
-        """
-
     def p_enum_methods(self, p: YaccProduction) -> None:
         """
         enum_methods : enum_methods functiondecl_stmt
