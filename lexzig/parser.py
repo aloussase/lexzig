@@ -1,6 +1,6 @@
 from typing import cast
 
-from ply.lex import LexToken
+from ply.lex import LexToken  # type: ignore
 import ply.yacc as yacc  # type: ignore
 from ply.yacc import YaccProduction
 
