@@ -297,7 +297,7 @@ class TestParser(unittest.TestCase):
         input = '''
         const x: Person = .{
             .name = "John",
-            .lastName = "Doe"
+            .lastName = "Doe",
         };
         '''
         expected = Program(stmts=[AssignmentStmt(

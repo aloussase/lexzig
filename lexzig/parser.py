@@ -436,6 +436,7 @@ class Parser:
     def p_struct_initializer_pairs(self, p: YaccProduction) -> None:
         """
         struct_initializer_pairs : struct_initializer_pair COMMA struct_initializer_pairs
+                                 | struct_initializer_pair COMMA
                                  | struct_initializer_pair
         """
         if len(p) == 4:
