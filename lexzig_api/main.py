@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
 
 from lexzig import run_analysis
+from lexzig.parser import ParserError
 
 
 app = FastAPI()
@@ -21,7 +22,14 @@ class AnalysisRequest(BaseModel):
 
 @app.post("/")
 async def analyse(request: AnalysisRequest):
-    result = run_analysis(request.code)
+    try:
+        result = run_analysis(request.code)
+    except ParserError as parser_error:
+        return HTTPException(
+            status_code=400,
+            detail=str(parser_error)
+        )
+
     if result is not None:
         return {'data': result}
     else:
