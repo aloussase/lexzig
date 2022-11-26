@@ -242,6 +242,7 @@ class Parser:
                            | switch_expression
                            | struct_decl
                            | enum_decl
+                           | anon_array
                            | struct_instantiation
                            | try_expression
                            | unary_expression
@@ -433,14 +434,13 @@ class Parser:
 
     def p_struct_initializer_pairs(self, p: YaccProduction) -> None:
         """
-        struct_initializer_pairs : struct_initializer_pairs struct_initializer_pair COMMA
-                                 | struct_initializer_pairs struct_initializer_pair
-                                 | empty
+        struct_initializer_pairs : struct_initializer_pair COMMA struct_initializer_pairs
+                                 | struct_initializer_pair
         """
-        if 3 <= len(p) <= 4:
-            p[0] = p[1] + [p[2]]
+        if len(p) == 4:
+            p[0] = [p[1]] + p[3]
         else:
-            p[0] = []
+            p[0] = [p[1]]
 
     def p_struct_initializer_pair(self, p: YaccProduction) -> None:
         """
@@ -554,6 +554,25 @@ class Parser:
                      | empty
         """
         p[0] = [] if len(p) == 2 else p[1] + [p[2]]
+
+    def p_anon_array(self, p: YaccProduction) -> None:
+        """
+        anon_array : DOT LCURLY array_elems RCURLY
+        """
+        p[0] = ast.AnonArray(elems=p[3])
+
+    def p_array_elems(self, p: YaccProduction) -> None:
+        """
+        array_elems : array_elems expression COMMA
+                    | array_elems expression
+                    | empty
+        """
+        if len(p) == 4:
+            p[0] = p[1] + [p[2]]
+        elif len(p) == 3:
+            p[0] = p[1] + [p[2]]
+        else:
+            p[0] = []
 
     def parse(self, input: str) -> ast.Program:
         return cast(ast.Program, self.parser.parse(input, lexer=Lexer().lexer))

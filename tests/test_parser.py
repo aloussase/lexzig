@@ -6,7 +6,8 @@ from lexzig.ast import (Program, FunctionDeclStmt, Identifier, AssignmentStmt,
                         SwitchElse, ReturnStmt, StructDeclaration,
                         StructInstantiation, StructInitializerPair,
                         String, FieldAccess, ForStmt, ForStmtCapture, TryExpr,
-                        UnaryOp, WhileStmt, AssignmentExpr, EnumDeclaration
+                        UnaryOp, WhileStmt, AssignmentExpr, EnumDeclaration,
+                        Char, AnonArray
                         )
 from lexzig.parser import Parser
 
@@ -16,6 +17,23 @@ class TestParser(unittest.TestCase):
 
     # TODO: Test arithmetic expressions
     # TODO: Test comparison operators
+
+    def test_parser_can_parse_anon_arrays(self):
+        input = "const x: [5]u8 = .{'h', 'e', 'l', 'l', 'o'};"
+        expected = Program(stmts=[AssignmentStmt(
+            Identifier('x'),
+            AnonArray(elems=[
+                Char("'h'"),
+                Char("'e'"),
+                Char("'l'"),
+                Char("'l'"),
+                Char("'o'")
+            ])
+        )])
+
+        result = self.parser.parse(input)
+
+        self.assertEqual(expected, result)
 
     def test_parser_can_parse_enums(self):
         input = '''
@@ -42,7 +60,7 @@ class TestParser(unittest.TestCase):
         input = '''
         var x = 1;
         while (x < 10) : (x += 1) {
-            std.debug.print("x = {}", .{});
+            std.debug.print("x = {}", .{x});
         }
         '''
         expected = Program(stmts=[
@@ -61,8 +79,7 @@ class TestParser(unittest.TestCase):
                     ),
                     args=[
                         String("\"x = {}\""),
-                        # TODO: Implement anonymous arrays
-                        StructInstantiation(Identifier("anonymous"), [])
+                        AnonArray(elems=[Identifier('x')])
                     ]
                 )])
         ])

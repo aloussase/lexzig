@@ -184,7 +184,7 @@ class TryExpr(Expr):
 
 
 @dataclass
-class WhileStmt:
+class WhileStmt(Stmt):
     type = "while-stmt"
     condition: Expr
     body: List[Stmt]
@@ -193,11 +193,16 @@ class WhileStmt:
 
 
 @dataclass
-class AssignmentExpr:
+class AssignmentExpr(Expr):
     type = "assignment-expr"
     ident: Identifier
     op: str
     value: Expr
+
+
+@dataclass
+class AnonArray(Expr):
+    elems: List[Expr]
 
 
 @dataclass
