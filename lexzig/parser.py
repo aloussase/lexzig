@@ -1,4 +1,4 @@
-from typing import cast
+from typing import cast, Optional
 
 from ply.lex import LexToken  # type: ignore
 import ply.yacc as yacc  # type: ignore
@@ -9,7 +9,7 @@ from lexzig.lexer import Lexer
 
 
 class ParserError(Exception):
-    def __init__(self, message: str, lineno: int):
+    def __init__(self, message: str, lineno: Optional[int] = None):
         super().__init__(message)
         self.message = message
         self.lineno = lineno
@@ -536,24 +536,6 @@ class Parser:
     def p_empty(self, _: YaccProduction) -> None:
         """empty :"""
 
-    def p_error(self, token: LexToken) -> None:
-        '''
-        Skip tokens until we meet a synchronization point, a semicolon in this
-        case.
-        '''
-        if not token:
-            print('Unexpected end of file while parsing, maybe you forgot a semicolon?')
-            return
-
-        print(f'Error while parsing at token: {token.type}')
-
-        while True:
-            token = self.parser.token()
-            if not token or token.type == 'SEMICOLON':
-                break
-
-        self.parser.restart()
-
     def p_enum_decl(self, p: YaccProduction) -> None:
         """
         enum_decl : ENUM LCURLY enum_variants enum_methods RCURLY
@@ -598,6 +580,25 @@ class Parser:
             p[0] = p[1] + [p[2]]
         else:
             p[0] = []
+
+    def p_error(self, token: LexToken) -> None:
+        '''
+        Skip tokens until we meet a synchronization point, a semicolon in this
+        case.
+        '''
+        if not token:
+            raise ParserError(
+                'Unexpected end of file while parsing, maybe you forgot a semicolon?'
+            )
+
+        print(f'Error while parsing at token: {token.type}')
+
+        while True:
+            token = self.parser.token()
+            if not token or token.type == 'SEMICOLON':
+                break
+
+        self.parser.restart()
 
     def parse(self, input: str) -> ast.Program:
         return cast(ast.Program, self.parser.parse(input, lexer=Lexer().lexer))

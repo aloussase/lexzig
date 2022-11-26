@@ -1,5 +1,9 @@
 from argparse import ArgumentParser
 
+from sys import platform
+if platform == "linux" or platform == "linux2":
+    import readline
+
 from rich.console import Console
 
 from lexzig.parser import Parser, ParserError
@@ -15,8 +19,13 @@ error_console = Console(stderr=True)
 
 
 def report_error(parser_error):
+    if parser_error.lineno is not None:
+        lineinfo = f"at line {parser_error.lineno}: "
+    else:
+        lineinfo = ""
+
     error_console.print(
-        f"[bold red]ERROR:[/] at line {parser_error.lineno}: " +
+        f"[bold red]ERROR:[/] {lineinfo}" +
         str(parser_error)
     )
 
