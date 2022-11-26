@@ -8,6 +8,13 @@ import lexzig.ast as ast
 from lexzig.lexer import Lexer
 
 
+class ParserError(Exception):
+    def __init__(self, message: str, lineno: int):
+        super().__init__(message)
+        self.message = message
+        self.lineno = lineno
+
+
 class Parser:
     """
     Implements a parser for a subset of the Zig programming language.
@@ -288,6 +295,22 @@ class Parser:
                               | expression MODULE expression
         """
         lhs, op, rhs = p[1:4]
+
+        if (isinstance(lhs, ast.Integer) and not isinstance(rhs, ast.Integer)):
+            raise ParserError(
+                f"Invalid types for binary operator '{op}', " +
+                "expected Integer and Integer, but got " +
+                f"{type(lhs).__name__} and {type(rhs).__name__}",
+                p.lineno(1)
+            )
+
+        if (isinstance(lhs, ast.String) and not isinstance(rhs, ast.String)):
+            raise ParserError(
+                f"Invalid types for binary operator '{op}', " +
+                "expected String and String, but got " +
+                f"{type(lhs).__name__} and {type(rhs).__name__}",
+                p.lineno(1)
+            )
 
         if op == '+':
             p[0] = ast.BinOp(lhs=lhs, op='+', rhs=rhs)

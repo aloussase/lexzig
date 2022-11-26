@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 from rich.console import Console
 
-from lexzig.parser import Parser
+from lexzig.parser import Parser, ParserError
 
 REPL_BANNER = """Welcome to the LexZig repl!
 
@@ -14,10 +14,20 @@ console = Console()
 error_console = Console(stderr=True)
 
 
+def report_error(parser_error):
+    error_console.print(
+        f"[bold red]ERROR:[/] at line {parser_error.lineno}: " +
+        str(parser_error)
+    )
+
+
 def analyze_file(filename: str) -> None:
     parser = Parser()
     with open(filename) as f:
-        console.print(parser.parse(f.read()))
+        try:
+            console.print(parser.parse(f.read()))
+        except ParserError as parser_error:
+            report_error(parser_error)
 
 
 def repl() -> None:
@@ -25,8 +35,11 @@ def repl() -> None:
     console.print(REPL_BANNER, style="bold")
 
     while (line := console.input(":high_voltage: ")) != 'q':
-        result = parser.parse(line)
-        console.print(result)
+        try:
+            result = parser.parse(line)
+            console.print(result)
+        except ParserError as parser_error:
+            report_error(parser_error)
 
 
 def main() -> None:
