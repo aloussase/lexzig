@@ -263,6 +263,10 @@ class Parser:
         """
         unary_expression : AMPERSAND expression
         """
+        if p[1] == '&' and not isinstance(p[2], ast.Identifier):
+            raise ParserError("Can only take a reference to an lvalue",
+                              p.lineno(1))
+
         p[0] = ast.UnaryOp(op=p[1], rhs=p[2])
 
     def p_value_expression(self, p: YaccProduction) -> None:
