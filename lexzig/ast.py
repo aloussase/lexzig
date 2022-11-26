@@ -1,17 +1,18 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Any, Callable
 
 
-def ast_node(name: str):
+def ast_node(name: str) -> Callable[[Any], Any]:
     """
     Attach the type of node to an ast node.
     """
 
-    def inner(self):
+    def inner(self: Any) -> Any:
         if hasattr(self, '__annotations__'):
             self.__annotations__['type'] = str
         setattr(self, 'type', name)
         return self
+
     return inner
 
 
