@@ -162,6 +162,7 @@ class Parser:
         """
         compound_typedecl : LBRACE RBRACE typedecl
                           | LBRACE INTEGER RBRACE typedecl
+                          | LBRACE UNDERSCORE RBRACE typedecl
                           | typedecl
         """
 

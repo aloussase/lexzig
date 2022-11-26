@@ -19,7 +19,7 @@ class TestParser(unittest.TestCase):
     # TODO: Test comparison operators
 
     def test_parser_can_parse_anon_arrays(self):
-        input = "const x: [5]u8 = .{'h', 'e', 'l', 'l', 'o'};"
+        input = "const x: [_]u8 = .{'h', 'e', 'l', 'l', 'o'};"
         expected = Program(stmts=[AssignmentStmt(
             Identifier('x'),
             AnonArray(elems=[
