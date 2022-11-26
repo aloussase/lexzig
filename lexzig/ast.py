@@ -2,190 +2,203 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 
+def ast_node(name: str):
+    """
+    Attach the type of node to an ast node.
+    """
+
+    def inner(self):
+        if hasattr(self, '__annotations__'):
+            self.__annotations__['type'] = str
+        setattr(self, 'type', name)
+        return self
+    return inner
+
+
 @dataclass
+@ast_node("stmt")
 class Stmt:
-    type = "stmt"
     pass
 
 
 @dataclass
+@ast_node("expr")
 class Expr(Stmt):
-    type = "expr"
     pass
 
 
+@ast_node("switch_match_target")
 class SwitchMatchTarget:
-    type = "switch-match-target"
     pass
 
 
 @dataclass
+@ast_node("identifier")
 class Identifier(Expr):
-    type = "identifier"
     name: str
 
 
 @dataclass
+@ast_node("integer")
 class Integer(Expr, SwitchMatchTarget):
-    type = "integer"
     n: int
 
 
 @dataclass
+@ast_node("string")
 class String(Expr):
-    type = "string"
     s: str
 
 
 @dataclass
+@ast_node("char")
 class Char(Expr):
-    type = "char"
     c: str
 
 
 @dataclass
+@ast_node("binary_op")
 class BinOp(Expr):
-    type = "binary-op"
     lhs: Expr
     op: str
     rhs: Expr
 
 
 @dataclass
+@ast_node("unary_op")
 class UnaryOp(Expr):
-    type = "unary-op"
     op: str
     rhs: Expr
 
 
 @dataclass
+@ast_node("if_expression")
 class IfExpr(Expr):
-    type = "if-expression"
     condition: Expr
     ifBranch: Expr
     elseBranch: Expr
 
 
 @dataclass
+@ast_node("switch_range")
 class SwitchRange(SwitchMatchTarget):
-    type = "switch-range"
     start: int
     end: int
 
 
 @dataclass
+@ast_node("switch_list")
 class SwitchList(SwitchMatchTarget):
-    type = "switch-list"
     elems: List[SwitchMatchTarget]
 
 
 @dataclass
+@ast_node("switch_else")
 class SwitchElse(SwitchMatchTarget):
-    type = "switch-else"
     pass
 
 
 @dataclass
+@ast_node("switch_branch")
 class SwitchBranch:
-    type = "switch-branch"
     match: SwitchMatchTarget
     body: Expr
 
 
 @dataclass
+@ast_node("switch_expression")
 class SwitchExpr(Expr):
-    type = "switch-expr"
     target: Expr
     branches: List[SwitchBranch]
 
 
 @dataclass
+@ast_node("function_call")
 class FunctionCall(Expr):
-    type = "function-call"
     name: Expr
     args: List[Expr]
 
 
 @dataclass
+@ast_node("assignment_stmt")
 class AssignmentStmt(Stmt):
-    type = "assignment-stmt"
     ident: Identifier
     value: Expr
 
 
 @dataclass
+@ast_node("function_declaration_stmt")
 class FunctionDeclStmt(Stmt):
-    type = "functiondecl-stmt"
     name: Identifier
     params: List[Identifier]
     body: List[Stmt]
 
 
 @dataclass
+@ast_node("return_stmt")
 class ReturnStmt(Stmt):
-    type = "return-stmt"
     value: Expr
 
 
 @dataclass
+@ast_node("enum")
 class EnumDeclaration(Expr):
-    type = "enum-decl"
     variants: List[Identifier]
     methods: List[FunctionDeclStmt]
 
 
 @dataclass
+@ast_node("struct")
 class StructDeclaration(Expr):
-    type = "struct-decl"
     fields: List[Identifier]
     methods: List[FunctionDeclStmt]
 
 
 @dataclass
+@ast_node("struct_initializer_pair")
 class StructInitializerPair:
-    type = "struct-initialization-pair"
     field_name: str
     value: Expr
 
 
 @dataclass
+@ast_node("struct_instantiation")
 class StructInstantiation(Expr):
-    type = "struct-instantiation"
     name: Identifier
     field_initializers: List[StructInitializerPair]
 
 
 @dataclass
+@ast_node("field_access")
 class FieldAccess(Expr):
-    type = "field-access"
     target: Expr
     field_name: Identifier
 
 
 @dataclass
+@ast_node("for_stmt_capture")
 class ForStmtCapture:
-    type = "for-stmt-capture"
     item: Identifier
     index: Optional[Identifier]
 
 
 @dataclass
+@ast_node("for_stmt")
 class ForStmt(Stmt):
-    type = "for-stmt"
     target: Identifier
     capture: ForStmtCapture
     body: List[Stmt]
 
 
 @dataclass
+@ast_node("try_expression")
 class TryExpr(Expr):
-    type = "try-expr"
     value: Expr
 
 
 @dataclass
+@ast_node("while_stmt")
 class WhileStmt(Stmt):
-    type = "while-stmt"
     condition: Expr
     body: List[Stmt]
     post_action: Optional[Expr] = None
@@ -193,19 +206,20 @@ class WhileStmt(Stmt):
 
 
 @dataclass
+@ast_node("assignment_expression")
 class AssignmentExpr(Expr):
-    type = "assignment-expr"
     ident: Identifier
     op: str
     value: Expr
 
 
 @dataclass
+@ast_node("anon_array")
 class AnonArray(Expr):
     elems: List[Expr]
 
 
 @dataclass
+@ast_node("program")
 class Program:
-    type = "program-stmt"
     stmts: List[Stmt]
