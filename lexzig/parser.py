@@ -348,7 +348,7 @@ class Parser:
             raise ParserError(
                 f"Invalid types for operator '{op}', " +
                 f"expected '{type(lhs).__name__}' and '{type(lhs).__name__}' "+
-                f"or '{type(lhs).__name__}' and '{type(lhs).__name__}', but got " +
+                f"or '{type(rhs).__name__}' and '{type(rhs).__name__}', but got " +
                 f"{type(lhs).__name__} and {type(rhs).__name__}",
                 p.lineno(1)
             )   
