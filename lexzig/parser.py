@@ -336,7 +336,10 @@ class Parser:
 
         lhs, op, rhs = p[1:4]
 
-        if ((op == '<' or op == '>') and not (isinstance(lhs, ast.Integer) and isinstance(rhs, ast.Integer))):
+        areInteger = isinstance(lhs, ast.Integer) and isinstance(rhs, ast.Integer)
+        areIdentifier = isinstance(lhs, ast.Identifier) and isinstance(rhs, ast.Identifier)
+
+        if ((op == '<' or op == '>') and not (areInteger or areIdentifier)):
             raise ParserError(
                 f"Invalid types for binary operator '{op}', " +
                 "expected Integer and Integer, but got " +
