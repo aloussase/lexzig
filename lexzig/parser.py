@@ -323,7 +323,7 @@ class Parser:
         elif op == '*':
             p[0] = ast.BinOp(lhs=lhs, op='*', rhs=rhs)
         elif op == '/':
-            if(isinstance(rhs,ast.Integer) and rhs.n==0):
+            if isinstance(rhs, ast.Integer) and rhs.n == 0:
                 raise ParserError(
                     f"'{op}': /by zero is undefined",
                     p.lineno(1)
@@ -331,16 +331,16 @@ class Parser:
             else:
                 p[0] = ast.BinOp(lhs=lhs, op='/', rhs=rhs)
         elif op == '%':
-            if(isinstance(rhs,ast.Integer) and rhs.n==0):
+            if isinstance(rhs, ast.Integer) and rhs.n == 0:
                 raise ParserError(
                     f"'{op}': /by zero is undefined",
                     p.lineno(1)
                 )
             else:
                 p[0] = ast.BinOp(lhs=lhs, op='%', rhs=rhs)
-                
 
     # TODO: Find another way to parse these, lots of S/R conflicts.
+
     def p_comparison_expression(self, p: YaccProduction) -> None:
         """
         comparison_expression : expression LT expression
@@ -351,11 +351,14 @@ class Parser:
 
         lhs, op, rhs = p[1:4]
 
-        isValidExprLeft = isinstance(lhs, ast.Integer) and (isinstance(rhs, ast.Integer) or isinstance(rhs, ast.Identifier))
+        isValidExprLeft = isinstance(lhs, ast.Integer) and (
+            isinstance(rhs, ast.Integer) or isinstance(rhs, ast.Identifier))
 
-        isValidExprRight = isinstance(rhs, ast.Integer) and (isinstance(lhs, ast.Integer) or isinstance(lhs, ast.Identifier))
+        isValidExprRight = isinstance(rhs, ast.Integer) and (
+            isinstance(lhs, ast.Integer) or isinstance(lhs, ast.Identifier))
 
-        if ((op == '<' or op == '>') and not (isValidExprLeft or isValidExprRight)):
+        if ((op == '<' or op == '>')
+                and not (isValidExprLeft or isValidExprRight)):
             raise ParserError(
                 f"Invalid types for binary operator '{op}', " +
                 "expected Integer and Integer, but got " +
@@ -363,14 +366,14 @@ class Parser:
                 p.lineno(1)
             )
 
-        if ((op == '==' or op == '!=') and not (type(lhs).__name__ == type(rhs).__name__)):
+        if ((op == '==' or op == '!=') and not (type(lhs) == type(rhs))):
             raise ParserError(
                 f"Invalid types for operator '{op}', " +
-                f"expected '{type(lhs).__name__}' and '{type(lhs).__name__}' "+
+                f"expected '{type(lhs).__name__}' and '{type(lhs).__name__}' " +
                 f"or '{type(rhs).__name__}' and '{type(rhs).__name__}', but got " +
                 f"{type(lhs).__name__} and {type(rhs).__name__}",
                 p.lineno(1)
-            )   
+            )
 
         p[0] = ast.BinOp(lhs=p[1], op=p[2], rhs=p[3])
 
