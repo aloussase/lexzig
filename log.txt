@@ -1,4 +1,483 @@
 Prueba: ./examples/while_basic.zig
+Fecha: Tue 29 Nov 2022 10:19:01 PM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(
+            ident=Identifier(name='std', type='identifier'),
+            value=FunctionCall(name=Identifier(name='import', type='identifier'), args=[String(s='"std"', type='string')], type='function_call'),
+            type='assignment_stmt'
+        ),
+        FunctionDeclStmt(
+            name=Identifier(name='main', type='identifier'),
+            params=[],
+            body=[
+                AssignmentStmt(ident=Identifier(name='x', type='identifier'), value=Integer(n=1, type='integer'), type='assignment_stmt'),
+                WhileStmt(
+                    condition=BinOp(lhs=Identifier(name='x', type='identifier'), op='<', rhs=Integer(n=10, type='integer'), type='binary_op'),
+                    body=[
+                        FunctionCall(
+                            name=FieldAccess(
+                                target=FieldAccess(
+                                    target=Identifier(name='std', type='identifier'),
+                                    field_name=Identifier(name='debug', type='identifier'),
+                                    type='field_access'
+                                ),
+                                field_name=Identifier(name='print', type='identifier'),
+                                type='field_access'
+                            ),
+                            args=[String(s='"x = {}"', type='string'), AnonArray(elems=[], type='anon_array')],
+                            type='function_call'
+                        )
+                    ],
+                    post_action=AssignmentExpr(
+                        ident=Identifier(name='x', type='identifier'),
+                        op='+=',
+                        value=Integer(n=1, type='integer'),
+                        type='assignment_expression'
+                    ),
+                    capture=None,
+                    type='while_stmt'
+                )
+            ],
+            type='function_declaration_stmt'
+        )
+    ],
+    type='program'
+)
+
+Prueba: ./examples/while.zig
+Fecha: Tue 29 Nov 2022 10:19:01 PM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(
+            ident=Identifier(name='std', type='identifier'),
+            value=FunctionCall(name=Identifier(name='import', type='identifier'), args=[String(s='"std"', type='string')], type='function_call'),
+            type='assignment_stmt'
+        ),
+        FunctionDeclStmt(
+            name=Identifier(name='main', type='identifier'),
+            params=[],
+            body=[
+                AssignmentStmt(ident=Identifier(name='i', type='identifier'), value=Integer(n=0, type='integer'), type='assignment_stmt'),
+                WhileStmt(
+                    condition=BinOp(lhs=Identifier(name='i', type='identifier'), op='<', rhs=Integer(n=10, type='integer'), type='binary_op'),
+                    body=[
+                        FunctionCall(
+                            name=FieldAccess(
+                                target=FieldAccess(
+                                    target=Identifier(name='std', type='identifier'),
+                                    field_name=Identifier(name='debug', type='identifier'),
+                                    type='field_access'
+                                ),
+                                field_name=Identifier(name='print', type='identifier'),
+                                type='field_access'
+                            ),
+                            args=[String(s='"i: {}\n"', type='string'), AnonArray(elems=[Identifier(name='i', type='identifier')], type='anon_array')],
+                            type='function_call'
+                        ),
+                        AssignmentExpr(
+                            ident=Identifier(name='i', type='identifier'),
+                            op='+=',
+                            value=Integer(n=1, type='integer'),
+                            type='assignment_expression'
+                        )
+                    ],
+                    post_action=None,
+                    capture=None,
+                    type='while_stmt'
+                ),
+                AssignmentStmt(ident=Identifier(name='j', type='identifier'), value=Integer(n=1, type='integer'), type='assignment_stmt'),
+                WhileStmt(
+                    condition=BinOp(lhs=Identifier(name='j', type='identifier'), op='<', rhs=Integer(n=20, type='integer'), type='binary_op'),
+                    body=[
+                        FunctionCall(
+                            name=FieldAccess(
+                                target=FieldAccess(
+                                    target=Identifier(name='std', type='identifier'),
+                                    field_name=Identifier(name='debug', type='identifier'),
+                                    type='field_access'
+                                ),
+                                field_name=Identifier(name='print', type='identifier'),
+                                type='field_access'
+                            ),
+                            args=[String(s='"j: {}\n"', type='string'), AnonArray(elems=[Identifier(name='j', type='identifier')], type='anon_array')],
+                            type='function_call'
+                        )
+                    ],
+                    post_action=AssignmentExpr(
+                        ident=Identifier(name='j', type='identifier'),
+                        op='*=',
+                        value=Integer(n=2, type='integer'),
+                        type='assignment_expression'
+                    ),
+                    capture=None,
+                    type='while_stmt'
+                )
+            ],
+            type='function_declaration_stmt'
+        )
+    ],
+    type='program'
+)
+
+Prueba: ./examples/token.zig
+Fecha: Tue 29 Nov 2022 10:19:01 PM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(
+            ident=Identifier(name='TokenType', type='identifier'),
+            value=EnumDeclaration(
+                variants=[
+                    Identifier(name='ILLEGAL', type='identifier'),
+                    Identifier(name='EOF', type='identifier'),
+                    Identifier(name='IDENT', type='identifier'),
+                    Identifier(name='INT', type='identifier'),
+                    Identifier(name='ASSIGN', type='identifier'),
+                    Identifier(name='PLUS', type='identifier'),
+                    Identifier(name='MINUS', type='identifier'),
+                    Identifier(name='BANG', type='identifier'),
+                    Identifier(name='ASTERISK', type='identifier'),
+                    Identifier(name='SLASH', type='identifier'),
+                    Identifier(name='EQ', type='identifier'),
+                    Identifier(name='NOT_EQ', type='identifier'),
+                    Identifier(name='LT', type='identifier'),
+                    Identifier(name='GT', type='identifier'),
+                    Identifier(name='COMMA', type='identifier'),
+                    Identifier(name='SEMICOLON', type='identifier'),
+                    Identifier(name='LPAREN', type='identifier'),
+                    Identifier(name='RPAREN', type='identifier'),
+                    Identifier(name='LBRACE', type='identifier'),
+                    Identifier(name='RBRACE', type='identifier'),
+                    Identifier(name='FUNCTION', type='identifier'),
+                    Identifier(name='LET', type='identifier'),
+                    Identifier(name='IF', type='identifier'),
+                    Identifier(name='FALSE', type='identifier'),
+                    Identifier(name='TRUE', type='identifier'),
+                    Identifier(name='ELSE', type='identifier'),
+                    Identifier(name='RETURN', type='identifier')
+                ],
+                methods=[],
+                type='enum'
+            ),
+            type='assignment_stmt'
+        )
+    ],
+    type='program'
+)
+
+Prueba: ./examples/switch.zig
+Fecha: Tue 29 Nov 2022 10:19:01 PM -05
+Resultado: Program(
+    stmts=[
+        FunctionDeclStmt(
+            name=Identifier(name='main', type='identifier'),
+            params=[],
+            body=[
+                AssignmentStmt(
+                    ident=Identifier(name='x', type='identifier'),
+                    value=SwitchExpr(
+                        target=Integer(n=10, type='integer'),
+                        branches=[
+                            SwitchBranch(
+                                match=SwitchRange(start=0, end=1, type='switch_range'),
+                                body=Integer(n=20, type='integer'),
+                                type='switch_branch'
+                            ),
+                            SwitchBranch(
+                                match=SwitchList(elems=[Integer(n=10, type='integer'), Integer(n=100, type='integer')], type='switch_list'),
+                                body=FunctionCall(
+                                    name=Identifier(name='divExact', type='identifier'),
+                                    args=[Integer(n=10, type='integer'), Integer(n=10, type='integer')],
+                                    type='function_call'
+                                ),
+                                type='switch_branch'
+                            ),
+                            SwitchBranch(match=, body=Integer(n=10, type='integer'), type='switch_branch')
+                        ],
+                        type='switch_expression'
+                    ),
+                    type='assignment_stmt'
+                ),
+                AssignmentStmt(ident=Identifier(name='_', type='identifier'), value=Identifier(name='x', type='identifier'), type='assignment_stmt')
+            ],
+            type='function_declaration_stmt'
+        )
+    ],
+    type='program'
+)
+
+Prueba: ./examples/struct.zig
+Fecha: Tue 29 Nov 2022 10:19:01 PM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(
+            ident=Identifier(name='Circle', type='identifier'),
+            value=StructDeclaration(
+                fields=[Identifier(name='x', type='identifier'), Identifier(name='y', type='identifier')],
+                methods=[
+                    FunctionDeclStmt(
+                        name=Identifier(name='new', type='identifier'),
+                        params=[Identifier(name='x', type='identifier'), Identifier(name='y', type='identifier')],
+                        body=[
+                            ReturnStmt(
+                                value=StructInstantiation(
+                                    name=Identifier(name='Circle', type='identifier'),
+                                    field_initializers=[
+                                        StructInitializerPair(
+                                            field_name='x',
+                                            value=Identifier(name='x', type='identifier'),
+                                            type='struct_initializer_pair'
+                                        ),
+                                        StructInitializerPair(
+                                            field_name='y',
+                                            value=Identifier(name='y', type='identifier'),
+                                            type='struct_initializer_pair'
+                                        )
+                                    ],
+                                    type='struct_instantiation'
+                                ),
+                                type='return_stmt'
+                            )
+                        ],
+                        type='function_declaration_stmt'
+                    )
+                ],
+                type='struct'
+            ),
+            type='assignment_stmt'
+        ),
+        FunctionDeclStmt(name=Identifier(name='main', type='identifier'), params=[], body=[], type='function_declaration_stmt')
+    ],
+    type='program'
+)
+
+Prueba: ./examples/output.zig
+Fecha: Tue 29 Nov 2022 10:19:00 PM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(
+            ident=Identifier(name='std', type='identifier'),
+            value=FunctionCall(name=Identifier(name='import', type='identifier'), args=[String(s='"std"', type='string')], type='function_call'),
+            type='assignment_stmt'
+        ),
+        FunctionDeclStmt(
+            name=Identifier(name='main', type='identifier'),
+            params=[],
+            body=[
+                FunctionCall(
+                    name=FieldAccess(
+                        target=FieldAccess(
+                            target=Identifier(name='std', type='identifier'),
+                            field_name=Identifier(name='debug', type='identifier'),
+                            type='field_access'
+                        ),
+                        field_name=Identifier(name='print', type='identifier'),
+                        type='field_access'
+                    ),
+                    args=[String(s='"Hello, World!\n"', type='string'), AnonArray(elems=[], type='anon_array')],
+                    type='function_call'
+                )
+            ],
+            type='function_declaration_stmt'
+        )
+    ],
+    type='program'
+)
+
+Prueba: ./examples/input.zig
+Fecha: Tue 29 Nov 2022 10:19:00 PM -05
+Resultado: Program(
+    stmts=[
+        AssignmentStmt(
+            ident=Identifier(name='std', type='identifier'),
+            value=FunctionCall(name=Identifier(name='import', type='identifier'), args=[String(s='"std"', type='string')], type='function_call'),
+            type='assignment_stmt'
+        ),
+        FunctionDeclStmt(
+            name=Identifier(name='main', type='identifier'),
+            params=[],
+            body=[
+                AssignmentStmt(
+                    ident=Identifier(name='stdin', type='identifier'),
+                    value=FunctionCall(
+                        name=FieldAccess(
+                            target=FunctionCall(
+                                name=FieldAccess(
+                                    target=FieldAccess(
+                                        target=Identifier(name='std', type='identifier'),
+                                        field_name=Identifier(name='io', type='identifier'),
+                                        type='field_access'
+                                    ),
+                                    field_name=Identifier(name='getStdIn', type='identifier'),
+                                    type='field_access'
+                                ),
+                                args=[],
+                                type='function_call'
+                            ),
+                            field_name=Identifier(name='reader', type='identifier'),
+                            type='field_access'
+                        ),
+                        args=[],
+                        type='function_call'
+                    ),
+                    type='assignment_stmt'
+                ),
+                AssignmentStmt(
+                    ident=Identifier(name='buf', type='identifier'),
+                    value=Identifier(name='undefined', type='identifier'),
+                    type='assignment_stmt'
+                ),
+                AssignmentStmt(
+                    ident=Identifier(name='line', type='identifier'),
+                    value=TryExpr(
+                        value=FunctionCall(
+                            name=FieldAccess(
+                                target=Identifier(name='stdin', type='identifier'),
+                                field_name=Identifier(name='readUntilDelimiter', type='identifier'),
+                                type='field_access'
+                            ),
+                            args=[UnaryOp(op='&', rhs=Identifier(name='buf', type='identifier'), type='unary_op'), Char(c="'\n'", type='char')],
+                            type='function_call'
+                        ),
+                        type='try_expression'
+                    ),
+                    type='assignment_stmt'
+                ),
+                AssignmentStmt(ident=Identifier(name='_', type='identifier'), value=Identifier(name='line', type='identifier'), type='assignment_stmt')
+            ],
+            type='function_declaration_stmt'
+        )
+    ],
+    type='program'
+)
+
+Prueba: ./examples/factorial.zig
+Fecha: Tue 29 Nov 2022 10:19:00 PM -05
+Resultado: Program(
+    stmts=[
+        FunctionDeclStmt(
+            name=Identifier(name='factorial', type='identifier'),
+            params=[Identifier(name='n', type='identifier')],
+            body=[
+                ReturnStmt(
+                    value=IfExpr(
+                        condition=BinOp(lhs=Identifier(name='n', type='identifier'), op='==', rhs=Integer(n=0, type='integer'), type='binary_op'),
+                        ifBranch=Integer(n=1, type='integer'),
+                        elseBranch=BinOp(
+                            lhs=Identifier(name='n', type='identifier'),
+                            op='*',
+                            rhs=FunctionCall(
+                                name=Identifier(name='factorial', type='identifier'),
+                                args=[BinOp(lhs=Identifier(name='n', type='identifier'), op='-', rhs=Integer(n=1, type='integer'), type='binary_op')],
+                                type='function_call'
+                            ),
+                            type='binary_op'
+                        ),
+                        type='if_expression'
+                    ),
+                    type='return_stmt'
+                )
+            ],
+            type='function_declaration_stmt'
+        ),
+        FunctionDeclStmt(
+            name=Identifier(name='main', type='identifier'),
+            params=[],
+            body=[
+                AssignmentStmt(
+                    ident=Identifier(name='std', type='identifier'),
+                    value=FunctionCall(
+                        name=Identifier(name='import', type='identifier'),
+                        args=[String(s='"std"', type='string')],
+                        type='function_call'
+                    ),
+                    type='assignment_stmt'
+                ),
+                AssignmentStmt(
+                    ident=Identifier(name='result', type='identifier'),
+                    value=FunctionCall(
+                        name=Identifier(name='factorial', type='identifier'),
+                        args=[Integer(n=10, type='integer')],
+                        type='function_call'
+                    ),
+                    type='assignment_stmt'
+                ),
+                FunctionCall(
+                    name=FieldAccess(
+                        target=FieldAccess(
+                            target=Identifier(name='std', type='identifier'),
+                            field_name=Identifier(name='debug', type='identifier'),
+                            type='field_access'
+                        ),
+                        field_name=Identifier(name='print', type='identifier'),
+                        type='field_access'
+                    ),
+                    args=[String(s='"fact = {}"', type='string'), AnonArray(elems=[], type='anon_array')],
+                    type='function_call'
+                )
+            ],
+            type='function_declaration_stmt'
+        )
+    ],
+    type='program'
+)
+
+Prueba: ./examples/export.zig
+Fecha: Tue 29 Nov 2022 10:19:00 PM -05
+Resultado: Program(
+    stmts=[
+        FunctionDeclStmt(
+            name=Identifier(name='div', type='identifier'),
+            params=[Identifier(name='x', type='identifier'), Identifier(name='y', type='identifier')],
+            body=[
+                ReturnStmt(
+                    value=BinOp(lhs=Identifier(name='x', type='identifier'), op='/', rhs=Identifier(name='y', type='identifier'), type='binary_op'),
+                    type='return_stmt'
+                )
+            ],
+            type='function_declaration_stmt'
+        )
+    ],
+    type='program'
+)
+
+Prueba: ./examples/while_basic.zig
+Fecha: Tue 29 Nov 2022 10:18:52 PM -05
+Resultado: 
+
+Prueba: ./examples/while.zig
+Fecha: Tue 29 Nov 2022 10:18:52 PM -05
+Resultado: 
+
+Prueba: ./examples/token.zig
+Fecha: Tue 29 Nov 2022 10:18:52 PM -05
+Resultado: 
+
+Prueba: ./examples/switch.zig
+Fecha: Tue 29 Nov 2022 10:18:52 PM -05
+Resultado: 
+
+Prueba: ./examples/struct.zig
+Fecha: Tue 29 Nov 2022 10:18:52 PM -05
+Resultado: 
+
+Prueba: ./examples/output.zig
+Fecha: Tue 29 Nov 2022 10:18:52 PM -05
+Resultado: 
+
+Prueba: ./examples/input.zig
+Fecha: Tue 29 Nov 2022 10:18:52 PM -05
+Resultado: 
+
+Prueba: ./examples/factorial.zig
+Fecha: Tue 29 Nov 2022 10:18:52 PM -05
+Resultado: 
+
+Prueba: ./examples/export.zig
+Fecha: Tue 29 Nov 2022 10:18:52 PM -05
+Resultado: 
+
+Prueba: ./examples/while_basic.zig
 Fecha: Sat 26 Nov 2022 01:30:54 PM -05
 Resultado: Program(
     stmts=[
@@ -72,7 +551,8 @@ Resultado: Program(
                                 field_name=Identifier(name='print', type='identifier'),
                                 type='field_access'
                             ),
-                            args=[String(s='"i: {}\n"', type='string'), AnonArray(elems=[Identifier(name='i', type='identifier')], type='anon_array')],
+                            args=[String(s='"i: {}
+"', type='string'), AnonArray(elems=[Identifier(name='i', type='identifier')], type='anon_array')],
                             type='function_call'
                         ),
                         AssignmentExpr(
@@ -100,7 +580,8 @@ Resultado: Program(
                                 field_name=Identifier(name='print', type='identifier'),
                                 type='field_access'
                             ),
-                            args=[String(s='"j: {}\n"', type='string'), AnonArray(elems=[Identifier(name='j', type='identifier')], type='anon_array')],
+                            args=[String(s='"j: {}
+"', type='string'), AnonArray(elems=[Identifier(name='j', type='identifier')], type='anon_array')],
                             type='function_call'
                         )
                     ],
@@ -274,7 +755,8 @@ Resultado: Program(
                         field_name=Identifier(name='print', type='identifier'),
                         type='field_access'
                     ),
-                    args=[String(s='"Hello, World!\n"', type='string'), AnonArray(elems=[], type='anon_array')],
+                    args=[String(s='"Hello, World!
+"', type='string'), AnonArray(elems=[], type='anon_array')],
                     type='function_call'
                 )
             ],
@@ -336,7 +818,8 @@ Resultado: Program(
                                 field_name=Identifier(name='readUntilDelimiter', type='identifier'),
                                 type='field_access'
                             ),
-                            args=[UnaryOp(op='&', rhs=Identifier(name='buf', type='identifier'), type='unary_op'), Char(c="'\n'", type='char')],
+                            args=[UnaryOp(op='&', rhs=Identifier(name='buf', type='identifier'), type='unary_op'), Char(c="'
+'", type='char')],
                             type='function_call'
                         ),
                         type='try_expression'
@@ -440,5 +923,3 @@ Resultado: Program(
     ],
     type='program'
 )
-
-
