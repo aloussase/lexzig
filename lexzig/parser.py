@@ -324,14 +324,18 @@ class Parser:
             p[0] = ast.BinOp(lhs=lhs, op='*', rhs=rhs)
         elif op == '/':
             if(isinstance(rhs,ast.Integer) and rhs.n==0):
-                f"ArimethicException, '{op}': /by zero is undefined"
-                p.lineno(1)
+                raise ParserError(
+                    f"'{op}': /by zero is undefined",
+                    p.lineno(1)
+                )
             else:
                 p[0] = ast.BinOp(lhs=lhs, op='/', rhs=rhs)
         elif op == '%':
             if(isinstance(rhs,ast.Integer) and rhs.n==0):
-                f"ParserException,'{op}': %by zero is undefined",
-                p.lineno(1)
+                raise ParserError(
+                    f"'{op}': /by zero is undefined",
+                    p.lineno(1)
+                )
             else:
                 p[0] = ast.BinOp(lhs=lhs, op='%', rhs=rhs)
                 
