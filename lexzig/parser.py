@@ -323,15 +323,18 @@ class Parser:
         elif op == '*':
             p[0] = ast.BinOp(lhs=lhs, op='*', rhs=rhs)
         elif op == '/':
-            if(rhs!=0):
+            if(isinstance(rhs,ast.Integer) and rhs.n==0):
+                f"ArimethicException, '{op}': /by zero is undefined"
+                p.lineno(1)
+            else:
                 p[0] = ast.BinOp(lhs=lhs, op='/', rhs=rhs)
-            else:
-                f"Arimethic exception, operation: /by zero is not supported"
         elif op == '%':
-            if(rhs!=0):
-                p[0] = ast.BinOp(lhs=lhs, op='%', rhs=rhs)
+            if(isinstance(rhs,ast.Integer) and rhs.n==0):
+                f"ParserException,'{op}': %by zero is undefined",
+                p.lineno(1)
             else:
-                f"Arimethic exception, operation: %by zero is not supported"
+                p[0] = ast.BinOp(lhs=lhs, op='%', rhs=rhs)
+                
 
     # TODO: Find another way to parse these, lots of S/R conflicts.
     def p_comparison_expression(self, p: YaccProduction) -> None:
