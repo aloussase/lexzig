@@ -1,3 +1,5 @@
+from typing import Any
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,7 +23,7 @@ class AnalysisRequest(BaseModel):
 
 
 @app.post("/")
-async def analyse(request: AnalysisRequest):
+async def analyse(request: AnalysisRequest) -> Any:
     try:
         result = run_analysis(request.code)
     except ParserError as parser_error:
@@ -31,7 +33,12 @@ async def analyse(request: AnalysisRequest):
         )
 
     if result is not None:
-        return {'data': result}
+        return {
+            'data': {
+                'tokens': list(map(str, result[0])),
+                'ast': result[1],
+            }
+        }
     else:
         raise HTTPException(
             status_code=400,

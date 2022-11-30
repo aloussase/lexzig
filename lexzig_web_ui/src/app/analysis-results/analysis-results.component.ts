@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { json } from '@codemirror/lang-json';
 import { EditorState, Extension } from '@codemirror/state';
 import { basicSetup, EditorView } from 'codemirror';
+import { AnalysisSuccess } from '../lexzig-service.service';
 
 @Component({
   selector: 'app-analysis-results',
@@ -9,11 +10,16 @@ import { basicSetup, EditorView } from 'codemirror';
   styleUrls: ['./analysis-results.component.scss'],
 })
 export class AnalysisResultsComponent implements OnInit {
-  private _analysisResults: string = '';
-  private resultsWindow: EditorView | undefined;
+  private ast: string = '';
+  private tokens: string = '';
+  private astWindow: EditorView | undefined;
+  private tokensWindow: EditorView | undefined;
 
-  private editorConfig = (...extensions: Extension[]) => ({
-    parent: document.querySelector('#analysis-results')!,
+  private editorConfig = (
+    idToAttachTo: string,
+    ...extensions: Extension[]
+  ) => ({
+    parent: document.querySelector(idToAttachTo)!,
     extensions: [
       ...extensions,
       json(),
@@ -28,16 +34,25 @@ export class AnalysisResultsComponent implements OnInit {
   });
 
   @Input()
-  get analysisResults(): string {
-    return this._analysisResults;
-  }
-  set analysisResults(results: any) {
-    this._analysisResults = JSON.stringify(results, null, 2);
-    if (this.resultsWindow)
-      this.resultsWindow.setState(
+  set analysisResults(results: AnalysisSuccess) {
+    if (results === undefined) return;
+
+    this.tokens = JSON.stringify(results.data.tokens, null, 2);
+    this.ast = JSON.stringify(results.data.ast, null, 2);
+
+    if (this.astWindow)
+      this.astWindow.setState(
         EditorState.create({
-          doc: this._analysisResults,
-          ...this.editorConfig(),
+          doc: this.ast,
+          ...this.editorConfig('#ast'),
+        })
+      );
+
+    if (this.tokensWindow)
+      this.tokensWindow.setState(
+        EditorState.create({
+          doc: this.tokens,
+          ...this.editorConfig('#tokens'),
         })
       );
   }
@@ -45,9 +60,14 @@ export class AnalysisResultsComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.resultsWindow = new EditorView({
+    this.astWindow = new EditorView({
       doc: '',
-      ...this.editorConfig(),
+      ...this.editorConfig('#ast'),
+    });
+
+    this.tokensWindow = new EditorView({
+      doc: '',
+      ...this.editorConfig('#tokens'),
     });
   }
 }

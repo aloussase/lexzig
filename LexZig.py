@@ -18,7 +18,7 @@ console = Console()
 error_console = Console(stderr=True)
 
 
-def report_error(parser_error):
+def report_error(parser_error: ParserError) -> None:
     if parser_error.lineno is not None:
         lineinfo = f"at line {parser_error.lineno}: "
     else:

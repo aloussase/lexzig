@@ -3,9 +3,16 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, of, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-type AnalysisSuccess = { data: any };
-type AnalysisError = { detail: string };
-type AnalysisResult = AnalysisSuccess | AnalysisError;
+export type AnalysisSuccess = {
+  data: {
+    tokens: string[];
+    ast: any;
+  };
+};
+
+export type AnalysisError = { detail: string };
+
+export type AnalysisResult = AnalysisSuccess | AnalysisError;
 
 @Injectable({
   providedIn: 'root',

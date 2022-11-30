@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { AnalysisSuccess } from './lexzig-service.service';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +15,9 @@ export class AppComponent {
 
   zeroImageUrl = environment.zeroImg;
 
-  onAnalysedCode({ data }: { data: any }) {
-    this.analysisResults = data;
+  onAnalysedCode(results: AnalysisSuccess) {
+    this.analysisResults = results;
+    console.log(results);
     this.analysisError = null;
   }
 
