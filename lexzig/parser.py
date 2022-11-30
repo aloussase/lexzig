@@ -333,6 +333,30 @@ class Parser:
                               | expression IS_NOT_EQUAL expression
                               | expression GREATER_THAN expression
         """
+
+        lhs, op, rhs = p[1:4]
+
+        isValidExprLeft = isinstance(lhs, ast.Integer) and (isinstance(rhs, ast.Integer) or isinstance(rhs, ast.Identifier))
+
+        isValidExprRight = isinstance(rhs, ast.Integer) and (isinstance(lhs, ast.Integer) or isinstance(lhs, ast.Identifier))
+
+        if ((op == '<' or op == '>') and not (isValidExprLeft or isValidExprRight)):
+            raise ParserError(
+                f"Invalid types for binary operator '{op}', " +
+                "expected Integer and Integer, but got " +
+                f"{type(lhs).__name__} and {type(rhs).__name__}",
+                p.lineno(1)
+            )
+
+        if ((op == '==' or op == '!=') and not (type(lhs).__name__ == type(rhs).__name__)):
+            raise ParserError(
+                f"Invalid types for operator '{op}', " +
+                f"expected '{type(lhs).__name__}' and '{type(lhs).__name__}' "+
+                f"or '{type(rhs).__name__}' and '{type(rhs).__name__}', but got " +
+                f"{type(lhs).__name__} and {type(rhs).__name__}",
+                p.lineno(1)
+            )   
+
         p[0] = ast.BinOp(lhs=p[1], op=p[2], rhs=p[3])
 
     def p_if_expression(self, p: YaccProduction) -> None:
